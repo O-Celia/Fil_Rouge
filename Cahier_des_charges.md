@@ -1,4 +1,4 @@
-# Cahier des charges - Déploiement de WordPress avec Terraform, Kubernetes (AKS), Docker, Jenkins, et outils de sécurité et de supervision
+# Déploiement de WordPress avec Terraform, Kubernetes (AKS), Docker, Jenkins, et outils de sécurité et de supervision
 
 ## 1. Introduction
 
