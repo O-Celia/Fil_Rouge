@@ -75,7 +75,7 @@ Prometheus est un système de surveillance et de collecte de métriques open-sou
 - Mise en place de Prometheus et Grafana pour la supervision.
 
 ## 5. Livrables attendus
-- Documentation de la configuration de l'infrastructure Kubernetes sur AKS à l'aide de Terraform.
+- Documentation du déploiement du cluster AKS à l'aide de Terraform.
 - Documentation du déploiement de WordPress et des outils de sécurité avec Jenkins.
 - Fichiers YAML stockés sur GitHub.
 - Rapports de tests de sécurité.
