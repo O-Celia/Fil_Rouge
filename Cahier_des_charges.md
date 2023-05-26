@@ -24,8 +24,7 @@ Ce cahier des charges décrit les spécifications et les exigences pour le dépl
 
 Terraform est un outil d'infrastructure en tant que code qui permet de déployer et de gérer l'infrastructure de manière reproductible. Dans ce projet, Terraform sera utilisé pour déployer l'infrastructure Kubernetes sur Azure Kubernetes Service (AKS). Le cluster AKS fournit une plateforme Kubernetes gérée qui permet de déployer, gérer et orchestrer les conteneurs de manière évolutive. Le cluster AKS sera utilisé pour exécuter les conteneurs WordPress et les autres composants nécessaires.
 
-- Utiliser Terraform pour déployer l'infrastructure Kubernetes sur Azure.
-- Configurer un cluster AKS avec les ressources nécessaires pour le scaling automatique.
+- Utiliser Terraform pour déployer un cluster AKS sur Azure.
 
 ### 3.2 Déploiement de la base de données
 
@@ -40,6 +39,7 @@ Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) 
 
 - Utiliser Jenkins pour déployer WordPress avec le cluster AKS à partir de fichiers YAML stockés sur GitHub.
 - Configurer Jenkins pour automatiser le déploiement, la mise à jour et la gestion de WordPress.
+- Configurer le pod de déploiement dans le cluster AKS avec les ressources nécessaires pour le scaling automatique et avec indicateurs.
 
 ### 3.4 Tests de sécurité
 
