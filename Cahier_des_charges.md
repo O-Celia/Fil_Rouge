@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-Ce cahier des charges décrit les spécifications et les exigences pour le déploiement de WordPress sur un cluster Kubernetes (AKS) en utilisant Terraform pour l'infrastructure, Docker pour Jenkins, et Jenkins pour WordPress. Le projet comprend également l'intégration d'outils de sécurité tels que WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels), ainsi que la mise en place de fonctionnalités de sécurité avancées telles que le TLS, l'authentification à deux facteurs, le RBAC, la limite de tentatives de connexion et l'IP whitelisting (2 derniers optionnels). Enfin, le projet inclut la mise en place de Prometheus et Grafana comme outils de supervision.
+Ce cahier des charges décrit les spécifications et les exigences pour le déploiement de WordPress sur un cluster Kubernetes (AKS) en utilisant Terraform pour l'infrastructure, Docker pour Jenkins, et Jenkins pour WordPress. Le projet comprend également l'intégration d'outils de sécurité tels que WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels), ainsi que la mise en place de fonctionnalités de sécurité avancées telles que le TLS, l'authentification à deux facteurs et la limite de tentatives de connexion. Enfin, le projet inclut la mise en place de Prometheus et Grafana comme outils de supervision.
 
 ## 2. Objectifs du projet
 
@@ -12,12 +12,10 @@ Ce cahier des charges décrit les spécifications et les exigences pour le dépl
 - Configurer l'Ingress Azure pour exposer WordPress au trafic entrant.
 - Utiliser Docker pour déployer Jenkins sur le cluster AKS.
 - Configurer Jenkins pour automatiser le déploiement de WordPress à partir de fichiers YAML stockés sur GitHub.
-- Effectuer des tests de sécurité avec WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels).
+- Effectuer des tests de sécurité avec WPScan, OWASP Dependency Check, Sonar Cloud.
 - Mettre en place le chiffrement TLS pour sécuriser la communication avec WordPress.
 - Implémenter l'authentification à deux facteurs pour l'accès à WordPress.
-- Mettre en place le RBAC (Role-Based Access Control) pour gérer les autorisations d'accès.
-- Configurer une limite de tentatives de connexion pour protéger contre les attaques par force brute (optionnel).
-- Configurer l'IP whitelisting pour limiter l'accès à WordPress depuis des adresses IP spécifiques (optionnel).
+- Configurer une limite de tentatives de connexion pour protéger contre les attaques par force brute .
 - Mettre en place Prometheus et Grafana pour superviser l'infrastructure et les performances de WordPress.
 
 ## 3. Exigences fonctionnelles
@@ -47,7 +45,7 @@ Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) 
 
 Les tests de sécurité, tels que WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit, sont utilisés pour identifier les vulnérabilités et les problèmes de sécurité dans les composants logiciels utilisés. Ces tests seront intégrés dans le processus de déploiement de Jenkins afin d'exécuter automatiquement ces tests sur WordPress. Les rapports de tests générés aideront à identifier les problèmes de sécurité potentiels et permettront de prendre les mesures nécessaires pour les résoudre.
 
-- Intégrer les outils de sécurité WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels) dans le processus de déploiement de Jenkins pour exécuter des tests de sécurité automatiques sur WordPress.
+- Intégrer les outils de sécurité WPScan, OWASP Dependency Check et Sonar Cloud dans le processus de déploiement de Jenkins pour exécuter des tests de sécurité automatiques sur WordPress.
 - Configurer les rapports de tests pour faciliter l'analyse des résultats.
 
 ### 3.5 Sécurité avancée (accès)
@@ -56,10 +54,7 @@ Pour renforcer la sécurité de l'application WordPress, des configurations avan
 
 - Mettre en place le chiffrement TLS pour sécuriser la communication avec WordPress.
 - Configurer l'authentification à deux facteurs pour renforcer la sécurité de l'accès à WordPress.
-- Implémenter le RBAC pour gérer les autorisations d'accès aux ressources Kubernetes.
 - Limiter le nombre de tentatives de connexion pour prévenir les attaques par force brute.
-- Configurer l'IP whitelisting pour autoriser l'accès à WordPress uniquement à partir d'adresses IP spécifiques.
-(2 derniers optionnels)
 
 ### 3.6 Supervision de l'infrastructure
 
@@ -74,9 +69,9 @@ Prometheus est un système de surveillance et de collecte de métriques open-sou
 - Utilisation d'Azure Kubernetes Service (AKS) comme plateforme Kubernetes.
 - Utilisation de Docker pour déployer Jenkins.
 - Utilisation de fichiers YAML stockés sur GitHub pour le déploiement de WordPress sur l'AKS avec Jenkins.
-- Intégration des outils de sécurité WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels).
+- Intégration des outils de sécurité WPScan, OWASP Dependency Check et Sonar Cloud.
 - Configuration du chiffrement TLS pour la communication avec WordPress.
-- Configuration de l'authentification à deux facteurs, du RBAC, de la limite de tentatives de connexion et de l'IP whitelisting pour renforcer la sécurité (2 derniers optionnels).
+- Configuration de l'authentification à deux facteurs et de la limite de tentatives de connexion pour renforcer la sécurité.
 - Mise en place de Prometheus et Grafana pour la supervision.
 
 ## 5. Livrables attendus
@@ -100,7 +95,5 @@ Prometheus est un système de surveillance et de collecte de métriques open-sou
 - Documentation de WPScan : https://wpscan.com/
 - Documentation d'OWASP Dependency Check : https://owasp.org/www-project-dependency-check/
 - Documentation de Sonar Cloud : https://sonarcloud.io/
-- Documentation de Clair : https://github.com/quay/clair
-- Documentation de Bandit : https://github.com/PyCQA/bandit
 - Documentation de Prometheus : https://prometheus.io/docs/
 - Documentation de Grafana : https://grafana.com/docs/
