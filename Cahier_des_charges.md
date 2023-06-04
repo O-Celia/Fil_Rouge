@@ -35,7 +35,7 @@ MySQL est un système de gestion de base de données relationnelle très utilis�
 
 ### 3.3 Déploiement de WordPress
 
-Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) largement utilisé. Dans ce projet, Jenkins sera déployé à l'aide de Docker sur le cluster AKS. Les fichiers YAML stockés sur GitHub contiendront les instructions nécessaires pour déployer WordPress avec le cluster AKS avec les configurations spécifiques souhaitées. Jenkins utilisera ces fichiers pour automatiser le déploiement de WordPress avec AKS, garantissant ainsi une mise en production rapide et reproductible.
+Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) largement utilisé. Dans ce projet, Jenkins sera déployé à l'aide de Docker et Terraform sur le cluster AKS. Les fichiers YAML stockés sur GitHub contiendront les instructions nécessaires pour déployer WordPress avec le cluster AKS avec les configurations spécifiques souhaitées. Jenkins utilisera ces fichiers pour automatiser le déploiement de WordPress avec AKS, garantissant ainsi une mise en production rapide et reproductible.
 
 - Utiliser Jenkins pour déployer WordPress avec le cluster AKS à partir de fichiers YAML stockés sur GitHub.
 - Configurer Jenkins pour automatiser le déploiement, la mise à jour et la gestion de WordPress.
