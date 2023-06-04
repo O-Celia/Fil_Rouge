@@ -26,14 +26,7 @@ Terraform est un outil d'infrastructure en tant que code qui permet de déployer
 
 - Utiliser Terraform pour déployer un cluster AKS sur Azure.
 
-### 3.2 Déploiement de la base de données
-
-MySQL est un système de gestion de base de données relationnelle très utilisé. Dans ce projet, MySQL sera déployé sur le cluster AKS pour stocker les données de WordPress. La sécurité de la base de données est essentielle pour protéger les informations sensibles. Des mesures de sécurité appropriées seront mises en place, telles que la configuration des autorisations d'accès et l'application de bonnes pratiques de sécurité pour garantir l'intégrité et la confidentialité des données stockées.
-
-- Configurer une base de données MySQL sur le cluster AKS.
-- Assurer la sécurité de la base de données en configurant l'accès et les autorisations appropriées.
-
-### 3.3 Déploiement de WordPress
+### 3.2 Déploiement de WordPress
 
 Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) largement utilisé. Dans ce projet, Jenkins sera déployé à l'aide de Docker et Terraform sur le cluster AKS. Les fichiers YAML stockés sur GitHub contiendront les instructions nécessaires pour déployer WordPress avec le cluster AKS avec les configurations spécifiques souhaitées. Jenkins utilisera ces fichiers pour automatiser le déploiement de WordPress avec AKS, garantissant ainsi une mise en production rapide et reproductible.
 
@@ -41,9 +34,16 @@ Jenkins est un outil d'intégration continue et de déploiement continu (CI/CD) 
 - Configurer Jenkins pour automatiser le déploiement, la mise à jour et la gestion de WordPress.
 - Configurer le pod de déploiement dans le cluster AKS avec les ressources nécessaires pour le scaling automatique et avec indicateurs.
 
+### 3.3 Déploiement de la base de données
+
+MySQL est un système de gestion de base de données relationnelle très utilisé. Dans ce projet, MySQL sera déployé sur le cluster AKS à partir d'un fichier YAML sur GitHub pour stocker les données de WordPress. La sécurité de la base de données est essentielle pour protéger les informations sensibles. Des mesures de sécurité appropriées seront mises en place, telles que la configuration des autorisations d'accès et l'application de bonnes pratiques de sécurité pour garantir l'intégrité et la confidentialité des données stockées.
+
+- Configurer une base de données MySQL sur le cluster AKS.
+- Assurer la sécurité de la base de données en configurant l'accès et les autorisations appropriées.
+
 ### 3.4 Tests de sécurité
 
-Les tests de sécurité, tels que WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit, sont utilisés pour identifier les vulnérabilités et les problèmes de sécurité dans les composants logiciels utilisés. Ces tests seront intégrés dans le processus de déploiement de Jenkins afin d'exécuter automatiquement ces tests sur WordPress. Les rapports de tests générés aideront à identifier les problèmes de sécurité potentiels et permettront de prendre les mesures nécessaires pour les résoudre.
+Les tests de sécurité, tels que WPScan, OWASP Dependency Check et Sonar Cloud sont utilisés pour identifier les vulnérabilités et les problèmes de sécurité dans les composants logiciels utilisés. Ces tests seront intégrés dans le processus de déploiement de Jenkins afin d'exécuter automatiquement ces tests sur WordPress. Les rapports de tests générés aideront à identifier les problèmes de sécurité potentiels et permettront de prendre les mesures nécessaires pour les résoudre.
 
 - Intégrer les outils de sécurité WPScan, OWASP Dependency Check et Sonar Cloud dans le processus de déploiement de Jenkins pour exécuter des tests de sécurité automatiques sur WordPress.
 - Configurer les rapports de tests pour faciliter l'analyse des résultats.
