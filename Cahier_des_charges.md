@@ -40,12 +40,14 @@ MySQL est un système de gestion de base de données relationnelle très utilis�
 
 - Configurer une base de données MySQL sur le cluster AKS.
 - Assurer la sécurité de la base de données en configurant l'accès et les autorisations appropriées.
+- Mettre en place un backup
 
 ### 3.4 Tests de sécurité
 
 Les tests de sécurité, tels que WPScan, OWASP Dependency Check et Sonar Cloud sont utilisés pour identifier les vulnérabilités et les problèmes de sécurité dans les composants logiciels utilisés. Ces tests seront intégrés dans le processus de déploiement de Jenkins afin d'exécuter automatiquement ces tests sur WordPress. Les rapports de tests générés aideront à identifier les problèmes de sécurité potentiels et permettront de prendre les mesures nécessaires pour les résoudre.
 
 - Intégrer les outils de sécurité WPScan, OWASP Dependency Check et Sonar Cloud dans le processus de déploiement de Jenkins pour exécuter des tests de sécurité automatiques sur WordPress.
+- Utiliser Application Insights synthetic monitoring pour vérifier la disponibilité du service.
 - Configurer les rapports de tests pour faciliter l'analyse des résultats.
 
 ### 3.5 Sécurité avancée (accès)
@@ -61,6 +63,7 @@ Pour renforcer la sécurité de l'application WordPress, des configurations avan
 Prometheus est un système de surveillance et de collecte de métriques open-source, tandis que Grafana est un outil de visualisation de données. Dans ce projet, Prometheus sera utilisé pour collecter les métriques de l'infrastructure Kubernetes et de WordPress, tandis que Grafana sera utilisé pour visualiser et analyser ces métriques de manière conviviale. Cela permettra aux administrateurs système et aux développeurs de superviser et d'optimiser les performances de l'application WordPress et de l'infrastructure sous-jacente.
 
 - Mettre en place Prometheus pour collecter les métriques de l'infrastructure et de WordPress.
+- Utiliser Prometheus node exporter pour exporter les données de la mémoire disque AKS.
 - Configurer Grafana pour visualiser et analyser les métriques de manière conviviale.
 
 ## 4. Contraintes techniques
