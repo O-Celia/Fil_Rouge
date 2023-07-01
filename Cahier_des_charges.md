@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-Ce cahier des charges décrit les spécifications et les exigences pour le déploiement de WordPress sur un cluster Kubernetes (AKS) en utilisant Terraform pour l'infrastructure, Docker pour Jenkins, et Jenkins pour WordPress. Le projet comprend également l'intégration d'outils de sécurité tels que WPScan, OWASP Dependency Check, Sonar Cloud, Clair et Bandit (2 derniers optionnels), ainsi que la mise en place de fonctionnalités de sécurité avancées telles que le TLS, l'authentification à deux facteurs et la limite de tentatives de connexion. Enfin, le projet inclut la mise en place de Prometheus et Grafana comme outils de supervision.
+Ce cahier des charges décrit les spécifications et les exigences pour le déploiement de WordPress sur un cluster Kubernetes (AKS) en utilisant Terraform pour l'infrastructure, Docker pour Jenkins, et Jenkins pour WordPress. Le projet comprend également l'intégration d'outils de sécurité tels que WPScan, OWASP Dependency Check, Sonar Cloud et Application Insights, ainsi que la mise en place de fonctionnalités de sécurité avancées telles que le TLS, l'authentification à deux facteurs et la limite de tentatives de connexion. Enfin, le projet inclut la mise en place de Prometheus et Grafana comme outils de supervision.
 
 ## 2. Objectifs du projet
 
