@@ -72,7 +72,7 @@ Prometheus est un système de surveillance et de collecte de métriques open-sou
 - Utilisation d'Azure Kubernetes Service (AKS) comme plateforme Kubernetes.
 - Utilisation de Docker pour déployer Jenkins.
 - Utilisation de fichiers YAML stockés sur GitHub pour le déploiement de WordPress sur l'AKS avec Jenkins.
-- Intégration des outils de sécurité WPScan, OWASP Dependency Check et Sonar Cloud.
+- Intégration des outils de sécurité WPScan, OWASP Dependency Check, Sonar Cloud et Application Insights.
 - Configuration du chiffrement TLS pour la communication avec WordPress.
 - Configuration de l'authentification à deux facteurs et de la limite de tentatives de connexion pour renforcer la sécurité.
 - Mise en place de Prometheus et Grafana pour la supervision.
