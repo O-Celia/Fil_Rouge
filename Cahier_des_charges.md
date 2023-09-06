@@ -10,7 +10,7 @@ Ce cahier des charges décrit les spécifications et les exigences pour le dépl
 - Utiliser Docker pour déployer Jenkins sur le cluster AKS.
 - Configurer Jenkins pour automatiser le déploiement de WordPress sur le cluster à partir de fichiers YAML stockés sur GitHub.
 - Configurer le pod de déploiement de WordPress avec autoscaler.
-- Configurer l'Ingress Azure pour exposer WordPress au trafic entrant.
+- Configurer l'Ingress Traefik pour exposer WordPress au trafic entrant.
 - Déployer une base de données MySQL pour WordPress sur le cluster.
 - Effectuer des tests de sécurité avec WPScan, OWASP Dependency Check, Sonar Cloud.
 - Mettre en place le chiffrement TLS pour sécuriser la communication avec WordPress.
