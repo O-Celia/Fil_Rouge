@@ -11,7 +11,7 @@ pipeline {
         stage('Build infrastructure') {
             steps {
                 sh('''
-                    cd Fil_Rouge/terraform
+                    cd terraform
                     terraform init
                     terraform apply
                 ''')
