@@ -8,5 +8,20 @@ pipeline {
                 ''')
             }
         }
+        stage('Build infrastructure') {
+            steps {
+                sh('''
+                    cd Fil_Rouge/terraform
+                    terraform init
+                    terraform apply
+                ''')
+            }
+        }
+    }
+    post {
+        always {
+            // Nettoyage de l'espace de travail Jenkins
+            step([$class: 'WsCleanup'])
+        }
     }
 }
