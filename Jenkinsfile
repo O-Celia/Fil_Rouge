@@ -8,10 +8,12 @@ pipeline {
                 ''')
             }
         }
-        stage('Build infrastructure') {
+        stage('Set up infrastructure with terraform') {
             steps {
                 sh('''
                     cd terraform
+                    terraform init
+                    terraform apply --auto-approve
                 ''')
             }
         }
