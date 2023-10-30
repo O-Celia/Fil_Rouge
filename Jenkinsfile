@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    environment {
+        AZURE_CREDENTIALS = credentials('ServicePrincipal')
+    }
+    
     stages {
         stage('Cloning the git') {
             steps {
@@ -8,16 +13,22 @@ pipeline {
                 ''')
             }
         }
+        
         stage('Set up infrastructure with terraform') {
             steps {
-                sh('''
-                    cd terraform
-                    terraform init
-                    terraform apply --auto-approve
-                ''')
+                script {
+                    withCredentials([azure(credentialsId: 'AZURE_CREDENTIALS', variable: 'AZURE_CREDENTIALS')]) {
+                    sh('''
+                        cd terraform
+                        terraform init
+                        terraform apply --auto-approve
+                    ''')
+                    }
+                }
             }
         }
     }
+    
     post {
         always {
             // Nettoyage de l'espace de travail Jenkins
