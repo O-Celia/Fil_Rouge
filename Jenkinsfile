@@ -17,7 +17,7 @@ pipeline {
         stage('Set up infrastructure with terraform') {
             steps {
                 script {
-                    withCredentials([azure(credentialsId: 'AZURE_CREDENTIALS', variable: 'AZURE_CREDENTIALS')]) {
+                    withCredentials([azure(credentialsId: 'AZURE_CREDENTIALS')]) {
                     sh('''
                         cd terraform
                         terraform init
