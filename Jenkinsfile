@@ -17,8 +17,10 @@ pipeline {
         stage('Set up infrastructure with terraform') {
             steps {
                 script {
-                    withCredentials([azure(credentialsId: 'AZURE_CREDENTIALS')]) {
+                    withCredentials([azureServicePrincipal(credentialsId: 'AZURE_CREDENTIALS')]) {
                     sh('''
+                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+                        az account set -s $AZURE_SUBSCRIPTION_ID
                         cd terraform
                         terraform init
                         terraform apply --auto-approve
