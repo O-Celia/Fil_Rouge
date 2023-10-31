@@ -2,6 +2,13 @@ pipeline {
     agent any
     
     stages {
+        stage('Pré-Cleanup') {
+            steps {
+                cleanWs()
+                echo "Building ${env.JOB_NAME}..."
+            }
+        }
+        
         stage('Cloning the git') {
             steps {
                 sh('''
@@ -24,13 +31,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-    
-    post {
-        always {
-            // Nettoyage de l'espace de travail Jenkins
-            step([$class: 'WsCleanup'])
         }
     }
 }
