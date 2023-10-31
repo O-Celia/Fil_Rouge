@@ -1,9 +1,5 @@
 pipeline {
     agent any
-
-    environment {
-        AZURE_CREDENTIALS = credentials('ServicePrincipal')
-    }
     
     stages {
         stage('Cloning the git') {
@@ -17,7 +13,7 @@ pipeline {
         stage('Set up infrastructure with terraform') {
             steps {
                 script {
-                    withCredentials([azureServicePrincipal(credentialsId: 'AZURE_CREDENTIALS')]) {
+                    withCredentials([azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
                     sh('''
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
                         az account set -s $AZURE_SUBSCRIPTION_ID
