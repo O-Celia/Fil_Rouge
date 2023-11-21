@@ -1,13 +1,13 @@
 pipeline {
     agent any
     
-    stages {
-        stage('Pré-Cleanup') {
-            steps {
-                cleanWs()
-                echo "Building ${env.JOB_NAME}..."
-            }
-        }
+    // stages {
+    //     stage('Pré-Cleanup') {
+    //         steps {
+    //             cleanWs()
+    //             echo "Building ${env.JOB_NAME}..."
+    //         }
+    //     }
         
         stage('Cloning the git') {
             steps {
@@ -22,6 +22,7 @@ pipeline {
                         // Current directory is a Git repository, so pull the latest changes
                         sh "git pull"
                     }
+                    sh "ls"
                 }
 
                 // sh('''
