@@ -21,7 +21,10 @@ pipeline {
                         sh "git clone ${repoUrl} ."
                     } else {
                         // Current directory is a Git repository, so pull the latest changes
-                        sh "git pull"
+                        sh('''
+                            git checkout main
+                            git pull
+                        ''')
                     }
                 }
 
