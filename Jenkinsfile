@@ -38,24 +38,24 @@ pipeline {
             steps {
                 script {
                     withCredentials([azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
-                        sh('''
-                            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-                            cd terraform
-                            terraform init
-                            // terraform apply --auto-approve
-                        ''')
+                        sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
 
-                        // Check if the AKS cluster already exists in the state
-                        def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
+                        // Initialize Terraform
+                        dir('terraform') {
+                            sh 'terraform init'
 
-                        if (aksExists) {
-                            // If AKS exists, apply changes only to the AKS cluster
-                            echo "AKS cluster exists. Applying changes to AKS only."
-                            sh 'terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks'
-                        } else {
-                            // If AKS does not exist, apply changes to the entire infrastructure
-                            echo "AKS cluster does not exist. Applying changes to the entire infrastructure."
-                            sh 'terraform apply -auto-approve'
+                            // Check if the AKS cluster exists in the Terraform state
+                            def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
+
+                            if (aksExists) {
+                                // If AKS exists, apply changes only to the AKS cluster
+                                echo "AKS cluster exists. Applying changes to AKS only."
+                                sh 'terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks'
+                            } else {
+                                // If AKS does not exist, apply changes to the entire infrastructure
+                                echo "AKS cluster does not exist. Applying changes to the entire infrastructure."
+                                sh 'terraform apply -auto-approve'
+                            }
                         }
                     }
                 }
