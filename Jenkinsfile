@@ -88,6 +88,8 @@ pipeline {
                             echo "Release 'myblog' does not exist. Installing chart."
                             sh 'helm install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
                         }
+
+                        sh "kubectl apply -f autoscaler.yaml"
                     }
                 }
             }
