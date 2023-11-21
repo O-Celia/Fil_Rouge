@@ -75,17 +75,19 @@ pipeline {
         stage('Set up Wordpress with kubernetes/helm') {
             steps {
                 script {
-                    // Check if the Helm release is already deployed
-                    def isDeployed = sh(script: "helm list --namespace default -q | grep -w myblog", returnStatus: true) == 0
+                    dir('terraform/helm') {
+                        // Check if the Helm release is already deployed
+                        def isDeployed = sh(script: "helm list --namespace default -q | grep -w myblog", returnStatus: true) == 0
 
-                    if (isDeployed) {
-                        // If the release is deployed, upgrade it
-                        echo "Release 'myblog' exists. Upgrading chart."
-                        sh 'helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
-                    } else {
-                        // If the release is not deployed, install it
-                        echo "Release 'myblog' does not exist. Installing chart."
-                        sh 'helm install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
+                        if (isDeployed) {
+                            // If the release is deployed, upgrade it
+                            echo "Release 'myblog' exists. Upgrading chart."
+                            sh 'helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
+                        } else {
+                            // If the release is not deployed, install it
+                            echo "Release 'myblog' does not exist. Installing chart."
+                            sh 'helm install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
+                        }
                     }
                 }
             }
