@@ -54,6 +54,7 @@ pipeline {
         stage('Set up Traefik ingress') {
             steps {
                 script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
                     // Check if the Traefik release is already deployed
                     def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
 
@@ -75,6 +76,7 @@ pipeline {
         stage('Set up Wordpress with kubernetes/helm') {
             steps {
                 script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
                     dir('terraform/helm') {
                         // Check if the Helm release is already deployed
                         def isDeployed = sh(script: "helm list --namespace default -q | grep -w myblog", returnStatus: true) == 0
