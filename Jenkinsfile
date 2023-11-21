@@ -67,6 +67,8 @@ pipeline {
         stage('Set up Wordpress with kubernetes/helm') {
             steps {
                 script {
+                    sh "helm install my-release oci://registry-1.docker.io/bitnamicharts/wordpress"
+                    
                     // Check if the Helm release is already deployed
                     def isDeployed = sh(script: "helm list --namespace default -q | grep -w myblog", returnStatus: true) == 0
 
