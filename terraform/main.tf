@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "aks" {
   location = var.location
 }
 
-/* resource "azurerm_mysql_flexible_server" "mysql" {
+resource "azurerm_mysql_flexible_server" "mysql" {
   name                = "mysql-server-celia"
   location            = azurerm_resource_group.aks.location
   resource_group_name = azurerm_resource_group.aks.name
@@ -18,15 +18,7 @@ resource "azurerm_mysql_flexible_database" "database" {
   server_name         = azurerm_mysql_flexible_server.mysql.name
   charset             = "utf8"
   collation           = "utf8_general_ci"
-} */
-/* 
-resource "azurerm_mysql_flexible_server_firewall_rule" "traefik_firewall_rule" {
-  name                = "allow-traefik"
-  resource_group_name = azurerm_mysql_flexible_server.mysql.resource_group_name
-  server_name         = azurerm_mysql_flexible_server.mysql.name
-  start_ip_address    = "51.145.181.57"
-  end_ip_address      = "51.145.181.57"
-} */
+}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
@@ -36,7 +28,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name       = "default"
-    node_count = 1
+    node_count = 2
     vm_size    = "Standard_A2_v2"
   }
 
