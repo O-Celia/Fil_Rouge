@@ -96,5 +96,17 @@ pipeline {
                 }
             }
         }
+        stage('Update DNS Record') {
+            steps {
+                script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
+                    // Get the IP address of Traefik
+                    def traefikIP = sh(script: "kubectl get svc traefik -n default --template=\"{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}\"", returnStdout: true).trim()
+
+                    // Update the DNS record on Gandi
+                    sh "curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Apikey cHrlXbtHASsiTwzf5sFPuDrc' -d '{\"rrset_values\": [\"${traefikIP}\"]}' 'https://api.gandi.net/v5/livedns/domains/cecicelia.site/records/myblog/A'"
+                }
+            }
+        }
     }
 }
