@@ -103,8 +103,11 @@ pipeline {
                     // Get the IP address of Traefik
                     def traefikIP = sh(script: "kubectl get svc traefik -n default --template=\"{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}\"", returnStdout: true).trim()
 
-                    // Update the DNS record on Gandi
-                    sh "curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Apikey cHrlXbtHASsiTwzf5sFPuDrc' -d '{\"rrset_values\": [\"${traefikIP}\"]}' 'https://api.gandi.net/v5/livedns/domains/cecicelia.site/records/myblog/A'"
+                    // Use Gandi API key from Jenkins credentials
+                    withCredentials([string(credentialsId: 'APIkey', variable: 'GANDI_API_KEY')]) {
+                        // Update the DNS record on Gandi
+                        sh "curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Apikey ${GANDI_API_KEY}' -d '{\"rrset_values\": [\"${traefikIP}\"]}' 'https://api.gandi.net/v5/livedns/domains/cecicelia.site/records/myblog/A'"
+                    }
                 }
             }
         }
