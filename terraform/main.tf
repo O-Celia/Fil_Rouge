@@ -41,4 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
+output "resource_group_name" {
+  value = azurerm_resource_group.aks.name
+}
 
