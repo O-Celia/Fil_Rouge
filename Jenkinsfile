@@ -179,37 +179,37 @@ pipeline {
         //     }
         // }
 
-        stage('Add TLS to Traefik ingress') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
-                        dir('terraform/helm') {
-                            sh "az aks get-credentials -g project_celia -n cluster-project"
-                            echo "Traefik is already installed. Upgrading Traefik."
-                            // Update tls-values.yaml with the actual email
-                            sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
-                            // Update values.yaml with new annotations
-                            // Check if the TLS annotation exists and add it if it doesn't
-                            sh '''
-                                if ! grep -q "traefik.ingress.kubernetes.io/router.tls: \"true\"" values.yaml; then
-                                    sed -i '/kubernetes.io\\/ingress.class: "traefik"/a \\    traefik.ingress.kubernetes.io/router.tls: "true"' values.yaml
-                                fi
-                            '''
-                            sh '''
-                                if ! grep -q "traefik.ingress.kubernetes.io/router.tls.certresolver: \"letsencrypt\"" values.yaml; then
-                                    sed -i '/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \\    traefik.ingress.kubernetes.io/router.tls.certresolver: "letsencrypt"' values.yaml
-                                fi
-                            '''
-                            sh('''
-                                helm repo add traefik https://traefik.github.io/charts
-                                helm repo update
-                                helm upgrade traefik -f tls-values.yaml traefik/traefik
-                                helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress
-                            ''')
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Add TLS to Traefik ingress') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
+        //                 dir('terraform/helm') {
+        //                     sh "az aks get-credentials -g project_celia -n cluster-project"
+        //                     echo "Traefik is already installed. Upgrading Traefik."
+        //                     // Update tls-values.yaml with the actual email
+        //                     sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
+        //                     // Update values.yaml with new annotations
+        //                     // Check if the TLS annotation exists and add it if it doesn't
+        //                     sh '''
+        //                         if ! grep -q "traefik.ingress.kubernetes.io/router.tls: \"true\"" values.yaml; then
+        //                             sed -i '/kubernetes.io\\/ingress.class: "traefik"/a \\    traefik.ingress.kubernetes.io/router.tls: "true"' values.yaml
+        //                         fi
+        //                     '''
+        //                     sh '''
+        //                         if ! grep -q "traefik.ingress.kubernetes.io/router.tls.certresolver: \"letsencrypt\"" values.yaml; then
+        //                             sed -i '/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \\    traefik.ingress.kubernetes.io/router.tls.certresolver: "letsencrypt"' values.yaml
+        //                         fi
+        //                     '''
+        //                     sh('''
+        //                         helm repo add traefik https://traefik.github.io/charts
+        //                         helm repo update
+        //                         helm upgrade traefik -f tls-values.yaml traefik/traefik
+        //                         helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress
+        //                     ''')
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
