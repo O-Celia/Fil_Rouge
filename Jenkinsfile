@@ -44,9 +44,13 @@ pipeline {
                             def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
 
                             if (aksExists) {
-                                // If AKS exists, apply changes only to the AKS cluster
+                                // If AKS exists, apply changes only to the AKS cluster and the monitor things
                                 echo "AKS cluster exists. Applying changes to AKS only."
-                                sh 'terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks'
+                                sh('''
+                                    terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks
+                                    terraform apply -auto-approve -target=azurerm_log_analytics_workspace.wordpress_monitor
+                                    terraform apply -auto-approve -target=azurerm_application_insights.wordpress_insights
+                                ''')
                             } else {
                                 // If AKS does not exist, apply changes to the entire infrastructure
                                 echo "AKS cluster does not exist. Applying changes to the entire infrastructure."

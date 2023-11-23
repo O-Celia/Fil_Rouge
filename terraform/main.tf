@@ -40,3 +40,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 }
+
+resource "azurerm_log_analytics_workspace" "wordpress_monitor" {
+  name                = var.monitor_name
+  location            = azurerm_resource_group.aks.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_application_insights" "wordpress_insights" {
+  name                = var.app_insights_name
+  location            = azurerm_resource_group.aks.location
+  resource_group_name = var.resource_group_name
+  application_type    = var.application_type
+}
