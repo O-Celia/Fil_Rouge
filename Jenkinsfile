@@ -45,7 +45,7 @@ pipeline {
 
                             if (aksExists) {
                                 // If AKS exists, apply changes only to the AKS cluster and the monitor things
-                                echo "AKS cluster exists. Applying changes to AKS only."
+                                echo "AKS cluster exists. Applying changes to AKS and monitoring only."
                                 sh('''
                                     terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks
                                     terraform apply -auto-approve -target=azurerm_log_analytics_workspace.wordpress_monitor
@@ -215,5 +215,15 @@ pipeline {
         //         }
         //     }
         // }
+
+        stage('Run WPScan') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
+                        sh "wpscan --url ${WORDPRESS_DNS} --ignore-main-redirect"
+                    }
+                }
+            }
+        }
     }
 }
