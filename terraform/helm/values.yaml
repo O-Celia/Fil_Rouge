@@ -16,14 +16,16 @@ mariadb:
 #   host: mysql-server-celia.mysql.database.azure.com
 #   user: wordpress
 #   password: Witcher_95
-  # database: mysql-database-celia
-  # port: 3306
+#   database: mysql-database-celia
+#   port: 3306
 
 ## Ingress Configuration
 ingress:
   enabled: true
   annotations: 
     kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: true
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
   hostname: myblog.cecicelia.site
 
 ## Wordpress Service

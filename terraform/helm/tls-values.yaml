@@ -1,0 +1,5 @@
+# -- Certificates resolvers configuration : traefik
+certResolvers: 
+  letsencrypt:
+    email: mail
+    tlsChallenge: true
