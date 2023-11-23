@@ -76,7 +76,6 @@ pipeline {
                                 // Update tls-values.yaml with the actual email
                                 sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
                                 sh('''
-                                    helm repo update
                                     helm upgrade traefik -f tls-values.yaml traefik/traefik
                                 ''')
                             }
