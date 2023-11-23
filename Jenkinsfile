@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             steps {
@@ -189,8 +189,19 @@ pipeline {
                             // Update tls-values.yaml with the actual email
                             sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
                             // Update values.yaml with new annotations
-                            sh'sed -i \'/kubernetes.io\\/ingress.class: "traefik"/a \\    traefik.ingress.kubernetes.io\\/router.tls: "true"\' values.yaml'
-                            sh'sed -i \'/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \\    traefik.ingress.kubernetes.io\\/router.tls.certresolver: "letsencrypt"\' values.yaml'
+                            // Check if the TLS annotation exists and add it if it doesn't
+                            sh '''
+                                if ! grep -q "traefik.ingress.kubernetes.io/router.tls: \"true\"" values.yaml; then
+                                    sed -i '/kubernetes.io\\/ingress.class: "traefik"/a \\    traefik.ingress.kubernetes.io/router.tls: "true"' values.yaml
+                                fi
+                            '''
+                            sh '''
+                                if ! grep -q "traefik.ingress.kubernetes.io/router.tls.certresolver: \"letsencrypt\"" values.yaml; then
+                                    sed -i '/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \\    traefik.ingress.kubernetes.io/router.tls.certresolver: "letsencrypt"' values.yaml
+                                fi
+                            '''
+                            // sh'sed -i \'/kubernetes.io\\/ingress.class: "traefik"/a \\    traefik.ingress.kubernetes.io\\/router.tls: "true"\' values.yaml'
+                            // sh'sed -i \'/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \\    traefik.ingress.kubernetes.io\\/router.tls.certresolver: "letsencrypt"\' values.yaml'
                             sh'cat values.yaml'
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
