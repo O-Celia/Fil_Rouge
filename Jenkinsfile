@@ -63,7 +63,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
                         dir('terraform/helm') {
-                            sh "az aks get-credentials -g project_celia -n cluster-project"
+                            sh "az aks get-credentials -g project_celia -n cluster-project --overwrite-existing"
                             // Check if the Traefik release is already deployed
                             def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
 
