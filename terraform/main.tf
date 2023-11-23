@@ -40,11 +40,3 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 }
-
-output "resource_group_name" {
-  value = azurerm_resource_group.aks.name
-}
-
-output "location_name" {
-  value = azurerm_resource_group.aks.location
-}

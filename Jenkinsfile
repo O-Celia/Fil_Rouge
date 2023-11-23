@@ -3,13 +3,6 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the current workspace
-                deleteDir()
-            }
-        }
-
         stage('Cloning the git') {
             steps {
                 script {
@@ -61,33 +54,27 @@ pipeline {
         stage('Set up Traefik ingress') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
-                        dir('terraform/helm') {
-                            sh "az aks get-credentials -g project_celia -n cluster-project --overwrite-existing"
-                            // Check if the Traefik release is already deployed
-                            def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
+                    dir('terraform/helm') {
+                        sh "az aks get-credentials -g project_celia -n cluster-project --overwrite-existing"
+                        // Check if the Traefik release is already deployed
+                        def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
 
-                            if (!isTraefikDeployed) {
-                                // If the release is not deployed, install it
-                                echo "Traefik is not installed. Installing Traefik."
-                                // Update tls-values.yaml with the actual email
-                                sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
-                                sh('''
-                                    helm repo add traefik https://traefik.github.io/charts
-                                    helm repo update
-                                    helm install traefik -f tls-values.yaml traefik/traefik
-                                ''')
-                            } else {
-                                // If Traefik is already installed, upgrade it with the new configuration
-                                echo "Traefik is already installed. Upgrading Traefik."
-                                // Update tls-values.yaml with the actual email
-                                sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
-                                sh('''
-                                    helm repo add traefik https://traefik.github.io/charts
-                                    helm repo update
-                                    helm upgrade traefik -f tls-values.yaml traefik/traefik
-                                ''')
-                            }
+                        if (!isTraefikDeployed) {
+                            // If the release is not deployed, install it
+                            echo "Traefik is not installed. Installing Traefik."
+                            sh('''
+                                helm repo add traefik https://traefik.github.io/charts
+                                helm repo update
+                                helm install traefik traefik/traefik
+                            ''')
+                        } else {
+                            // If Traefik is already installed, upgrade it with the new configuration
+                            echo "Traefik is already installed. Upgrading Traefik."
+                            sh('''
+                                helm repo add traefik https://traefik.github.io/charts
+                                helm repo update
+                                helm upgrade traefik traefik/traefik
+                            ''')
                         }
                     }
                 }
@@ -185,6 +172,29 @@ pipeline {
         //     }
         // }
 
-        
+        stage('Add TLS to Traefik ingress') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
+                        dir('terraform/helm') {
+                            sh "az aks get-credentials -g project_celia -n cluster-project"
+                            echo "Traefik is already installed. Upgrading Traefik."
+                            // Update tls-values.yaml with the actual email
+                            sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
+                            // Update values.yaml with new annotations
+                            sh '''
+                                sed -i '/kubernetes.io\\/ingress.class: "traefik"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls: "true"' values.yaml
+                                sed -i '/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls.certresolver: "letsencrypt"' values.yaml
+                            '''
+                            sh('''
+                                helm repo add traefik https://traefik.github.io/charts
+                                helm repo update
+                                helm upgrade traefik -f tls-values.yaml traefik/traefik
+                            ''')
+                        }
+                    }
+                }
+            }
+        }
     }
 }
