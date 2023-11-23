@@ -183,8 +183,8 @@ pipeline {
                             sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
                             // Update values.yaml with new annotations
                             sh '''
-                                sed -i '/kubernetes.io\\/ingress.class: "traefik"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls: "true"' values.yaml
-                                sed -i '/traefik.ingress.kubernetes.io\\/router.tls: "true"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls.certresolver: "letsencrypt"' values.yaml
+                                sh "sed -i '/kubernetes.io\\/ingress.class: \"traefik\"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls: \"true\"' values.yaml"
+                                sh "sed -i '/traefik.ingress.kubernetes.io\\/router.tls: \"true\"/a \ \ \ \ traefik.ingress.kubernetes.io/router.tls.certresolver: \"letsencrypt\"' values.yaml"
                             '''
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
