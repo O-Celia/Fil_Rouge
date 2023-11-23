@@ -177,41 +177,6 @@ pipeline {
         //     }
         // }
 
-        stage('Set up Traefik ingress') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
-                        dir('terraform/helm') {
-                            sh "az aks get-credentials -g project_celia -n cluster-project"
-                            // Check if the Traefik release is already deployed
-                            def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
-
-                            if (!isTraefikDeployed) {
-                                // If the release is not deployed, install it
-                                echo "Traefik is not installed. Installing Traefik."
-                                // Update tls-values.yaml with the actual email
-                                sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
-                                sh('''
-                                    helm repo add traefik https://traefik.github.io/charts
-                                    helm repo update
-                                    helm install traefik -f tls-values.yaml traefik/traefik
-                                ''')
-                            } else {
-                                // If Traefik is already installed, upgrade it with the new configuration
-                                echo "Traefik is already installed. Upgrading Traefik."
-                                // Update tls-values.yaml with the actual email
-                                sh "sed -i 's/email: mail/email: ${CERTBOT_EMAIL}/' tls-values.yaml"
-                                sh('''
-                                    helm repo update
-                                    helm upgrade traefik -f tls-values.yaml traefik/traefik
-                                ''')
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         
     }
 }
