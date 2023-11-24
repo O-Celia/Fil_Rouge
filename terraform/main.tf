@@ -36,6 +36,11 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   delegated_subnet_id    = azurerm_subnet.subnet.id
   private_dns_zone_id    = azurerm_private_dns_zone.dns.id
   sku_name            = "GP_Standard_D2ads_v5"
+  lifecycle {
+    ignore_changes = [
+      zone,
+    ]
+  }
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_link]
 }
