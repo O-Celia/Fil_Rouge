@@ -30,7 +30,7 @@ variable "application_type" {
 
 variable "storage" {
   type    = string
-  default = "scanresults"
+  default = "celiascanresults"
 }
 
 variable "container_storage" {
