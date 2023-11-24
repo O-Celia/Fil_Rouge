@@ -36,6 +36,8 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   delegated_subnet_id    = azurerm_subnet.subnet.id
   private_dns_zone_id    = azurerm_private_dns_zone.dns.id
   sku_name            = "GP_Standard_D2ads_v5"
+
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_link]
 }
 
 resource "azurerm_mysql_flexible_database" "database" {
@@ -93,14 +95,13 @@ resource "azurerm_storage_container" "wpscan" {
   storage_account_name  = azurerm_storage_account.security_results.name
 }
 
-resource "azurerm_private_dns_zone" "dns" {
-  name                = "celia.mysql.database.azure.com"
-  resource_group_name = azurerm_resource_group.aks.name
-}
-
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_link" {
   name                  = "DBVnetZone.com"
   private_dns_zone_name = azurerm_private_dns_zone.dns.name
   virtual_network_id    = azurerm_virtual_network.vnet.id
   resource_group_name   = azurerm_resource_group.aks.name
+}
+resource "azurerm_private_dns_zone" "dns" {
+  name                = "celia.mysql.database.azure.com"
+  resource_group_name = azurerm_resource_group.aks.name
 }
