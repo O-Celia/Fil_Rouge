@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             steps {
@@ -39,23 +39,24 @@ pipeline {
                         // Initialize Terraform
                         dir('terraform') {
                             sh 'terraform init'
+                            sh 'terraform apply -auto-approve'
 
                             // Check if the AKS cluster exists in the Terraform state
-                            def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
+                            // def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
 
-                            if (aksExists) {
-                                // If AKS exists, apply changes only to the AKS cluster and the monitor things
-                                echo "AKS cluster exists. Applying changes to AKS and monitoring only."
-                                sh('''
-                                    terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks
-                                    terraform apply -auto-approve -target=azurerm_log_analytics_workspace.wordpress_monitor
-                                    terraform apply -auto-approve -target=azurerm_application_insights.wordpress_insights
-                                ''')
-                            } else {
-                                // If AKS does not exist, apply changes to the entire infrastructure
-                                echo "AKS cluster does not exist. Applying changes to the entire infrastructure."
-                                sh 'terraform apply -auto-approve'
-                            }
+                            // if (aksExists) {
+                            //     // If AKS exists, apply changes only to the AKS cluster and the monitor things
+                            //     echo "AKS cluster exists. Applying changes to AKS and monitoring only."
+                            //     sh('''
+                            //         terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks
+                            //         terraform apply -auto-approve -target=azurerm_log_analytics_workspace.wordpress_monitor
+                            //         terraform apply -auto-approve -target=azurerm_application_insights.wordpress_insights
+                            //     ''')
+                            // } else {
+                            //     // If AKS does not exist, apply changes to the entire infrastructure
+                            //     echo "AKS cluster does not exist. Applying changes to the entire infrastructure."
+                            //     sh 'terraform apply -auto-approve'
+                            // }
                         }
                     }
                 }

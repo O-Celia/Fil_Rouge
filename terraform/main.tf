@@ -3,12 +3,37 @@ resource "azurerm_resource_group" "aks" {
   location = var.location
 }
 
+resource "azurerm_virtual_network" "vnet" {
+  name                = "vnet_mysql"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  address_space       = ["10.0.0.0/16"]
+}
+
+resource "azurerm_subnet" "subnet" {
+  name                 = "subnet_mysql"
+  resource_group_name  = azurerm_resource_group.aks.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+  service_endpoints    = ["Microsoft.Storage"]
+  delegation {
+    name = "fs"
+    service_delegation {
+      name = "Microsoft.DBforMySQL/flexibleServers"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+    }
+  }
+}
+
 resource "azurerm_mysql_flexible_server" "mysql" {
   name                = "mysql-server-celia"
   location            = azurerm_resource_group.aks.location
   resource_group_name = azurerm_resource_group.aks.name
   administrator_login =  "wordpress"
   administrator_password = "Witcher_95"
+  delegated_subnet_id    = azurerm_subnet.subnet.id
   sku_name            = "GP_Standard_D2ads_v5"
 }
 
