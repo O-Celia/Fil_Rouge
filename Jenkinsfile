@@ -87,6 +87,7 @@ pipeline {
 
                             // Apply the YAML file using kubectl
                             sh 'kubectl apply -f secret-cert-ssl.yml'
+                            sh 'cat secret-cert-ssl.yml'
                         }
                     }
                 }
