@@ -30,6 +30,7 @@ ingress:
 service:
   type: ClusterIP
 
+## SSL Certificate
 env:
   WORDPRESS_DATABASE_SSL_CA_FILE: "/bitnami/wordpress/mysql-ssl-cert.pem"
 
