@@ -7,17 +7,17 @@ wordpressLastName: Ouedraogo
 wordpressBlogName: My Final Project
 
 ## Database Settings
-mariadb:
-  enabled: true
-  auth.rootPassword: Witcher_95
-  database: mariadb-celia
-  username: wordpress
-# externalDatabase:
-#   host: mysql-server-celia.mysql.database.azure.com
-#   user: wordpress
-#   password: Witcher_95
-#   database: mysql-database-celia
-#   port: 3306
+# mariadb:
+#   enabled: true
+#   auth.rootPassword: Witcher_95
+#   database: mariadb-celia
+#   username: wordpress
+externalDatabase:
+  host: mysql-server-celia.mysql.database.azure.com
+  user: wordpress
+  password: Witcher_95
+  database: mysql-database-celia
+  port: 3306
 
 ## Ingress Configuration
 ingress:

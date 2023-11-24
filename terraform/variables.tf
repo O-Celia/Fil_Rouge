@@ -27,3 +27,23 @@ variable "application_type" {
   type    = string
   default = "web"
 }
+
+variable "storage" {
+  type    = string
+  default = "results-storage"
+}
+
+variable "container_storage" {
+  type    = string
+  default = "wpscan-results"
+}
+
+variable "storage_tier" {
+  type    = string
+  default = "Standard"
+}
+
+variable "replication_type" {
+  type    = string
+  default = "LRS"
+}

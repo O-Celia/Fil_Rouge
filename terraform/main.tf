@@ -3,22 +3,22 @@ resource "azurerm_resource_group" "aks" {
   location = var.location
 }
 
-# resource "azurerm_mysql_flexible_server" "mysql" {
-#   name                = "mysql-server-celia"
-#   location            = azurerm_resource_group.aks.location
-#   resource_group_name = azurerm_resource_group.aks.name
-#   administrator_login =  "wordpress"
-#   administrator_password = "Witcher_95"
-#   sku_name            = "GP_Standard_D2ads_v5"
-# }
+resource "azurerm_mysql_flexible_server" "mysql" {
+  name                = "mysql-server-celia"
+  location            = azurerm_resource_group.aks.location
+  resource_group_name = azurerm_resource_group.aks.name
+  administrator_login =  "wordpress"
+  administrator_password = "Witcher_95"
+  sku_name            = "GP_Standard_D2ads_v5"
+}
 
-# resource "azurerm_mysql_flexible_database" "database" {
-#   name                = "mysql-database-celia"
-#   resource_group_name = azurerm_resource_group.aks.name
-#   server_name         = azurerm_mysql_flexible_server.mysql.name
-#   charset             = "utf8"
-#   collation           = "utf8_general_ci"
-# }
+resource "azurerm_mysql_flexible_database" "database" {
+  name                = "mysql-database-celia"
+  resource_group_name = azurerm_resource_group.aks.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  charset             = "utf8"
+  collation           = "utf8_general_ci"
+}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
@@ -52,4 +52,17 @@ resource "azurerm_application_insights" "wordpress_insights" {
   location            = azurerm_resource_group.aks.location
   resource_group_name = var.resource_group_name
   application_type    = var.application_type
+}
+
+resource "azurerm_storage_account" "security_results" {
+  name                     = var.storage
+  resource_group_name      = azurerm_resource_group.aks.name
+  location                 = azurerm_resource_group.aks.location
+  account_tier             = var.storage_tier
+  account_replication_type = var.replication_type
+}
+
+resource "azurerm_storage_container" "wpscan" {
+  name                  = var.container_storage
+  storage_account_name  = azurerm_storage_account.security_results.name
 }
