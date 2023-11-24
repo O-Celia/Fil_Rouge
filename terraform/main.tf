@@ -94,7 +94,7 @@ resource "azurerm_storage_container" "wpscan" {
 }
 
 resource "azurerm_private_dns_zone" "dns" {
-  name                = "mysql-server-celia.mysql.database.azure.com"
+  name                = "celia.mysql.database.azure.com"
   resource_group_name = azurerm_resource_group.aks.name
 }
 

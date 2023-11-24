@@ -13,7 +13,7 @@ wordpressBlogName: My Final Project
 #   database: mariadb-celia
 #   username: wordpress
 externalDatabase:
-  host: mysql-server-celia.mysql.database.azure.com
+  host: celia.mysql.database.azure.com
   user: wordpress
   password: Witcher_95
   database: mysql-database-celia
