@@ -30,7 +30,7 @@ variable "application_type" {
 
 variable "storage" {
   type    = string
-  default = "results-storage"
+  default = "scanresults"
 }
 
 variable "container_storage" {
