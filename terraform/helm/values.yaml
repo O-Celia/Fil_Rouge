@@ -29,3 +29,16 @@ ingress:
 ## Wordpress Service
 service:
   type: ClusterIP
+
+env:
+  WORDPRESS_DATABASE_SSL_CA_FILE: "/bitnami/wordpress/mysql-ssl-cert.pem"
+
+extraVolumes:
+  - name: mysql-ssl-cert
+    secret:
+      secretName: mysql-ssl-cert
+
+extraVolumeMounts:
+  - name: mysql-ssl-cert
+    mountPath: "/bitnami/wordpress/mysql-ssl-cert.pem"
+    subPath: mysql-ssl-cert.pem

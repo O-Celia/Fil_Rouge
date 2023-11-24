@@ -40,23 +40,6 @@ pipeline {
                         dir('terraform') {
                             sh 'terraform init'
                             sh 'terraform apply -auto-approve'
-
-                            // Check if the AKS cluster exists in the Terraform state
-                            // def aksExists = sh(script: "terraform state list azurerm_kubernetes_cluster.aks", returnStatus: true) == 0
-
-                            // if (aksExists) {
-                            //     // If AKS exists, apply changes only to the AKS cluster and the monitor things
-                            //     echo "AKS cluster exists. Applying changes to AKS and monitoring only."
-                            //     sh('''
-                            //         terraform apply -auto-approve -target=azurerm_kubernetes_cluster.aks
-                            //         terraform apply -auto-approve -target=azurerm_log_analytics_workspace.wordpress_monitor
-                            //         terraform apply -auto-approve -target=azurerm_application_insights.wordpress_insights
-                            //     ''')
-                            // } else {
-                            //     // If AKS does not exist, apply changes to the entire infrastructure
-                            //     echo "AKS cluster does not exist. Applying changes to the entire infrastructure."
-                            //     sh 'terraform apply -auto-approve'
-                            // }
                         }
                     }
                 }
@@ -87,6 +70,23 @@ pipeline {
                                 helm repo update
                                 helm upgrade traefik traefik/traefik
                             ''')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Secret') {
+            steps {
+                script {
+                    dir('terraform/helm') {
+                        // Retrieve the base64-encoded SSL certificate from Jenkins credentials
+                        withCredentials([string(credentialsId: 'mysql-ssl', variable: 'SSL_CERT')]) {
+                            // Replace placeholder in the YAML file with the actual base64-encoded SSL certificate
+                            sh "sed -i 's/ssl-secret/${SSL_CERT}/' secret-cert-ssl.yml"
+
+                            // Apply the YAML file using kubectl
+                            sh 'kubectl apply -f secret-cert-ssl.yml'
                         }
                     }
                 }
