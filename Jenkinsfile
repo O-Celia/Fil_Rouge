@@ -129,6 +129,7 @@ pipeline {
                             echo "Traefik is already installed. Upgrading Traefik."
                             // Update certmanager.yaml with the actual email
                             sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
+                            sh "kubectl apply -f certmanager"
                             // Update traefik with values.yaml
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
