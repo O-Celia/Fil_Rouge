@@ -22,24 +22,29 @@ mariadb:
 ## Ingress Configuration
 ingress:
   enabled: true
+  certManager: true
   annotations: 
     kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/issuer: "certmanager"
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect@kubernetescrd
   hostname: myblog.cecicelia.site
+  extraTls: [myblog.cecicelia.site]
+  secret: tls-ingress-http
 
 ## Wordpress Service
 service:
   type: ClusterIP
 
-## SSL Certificate
-env:
-  WORDPRESS_DATABASE_SSL_CA_FILE: "/bitnami/wordpress/mysql-ssl-cert.pem"
+# ## SSL Certificate
+# env:
+#   WORDPRESS_DATABASE_SSL_CA_FILE: "/bitnami/wordpress/mysql-ssl-cert.pem"
 
-extraVolumes:
-  - name: mysql-ssl-cert
-    secret:
-      secretName: mysql-ssl-cert
+# extraVolumes:
+#   - name: mysql-ssl-cert
+#     secret:
+#       secretName: mysql-ssl-cert
 
-extraVolumeMounts:
-  - name: mysql-ssl-cert
-    mountPath: "/bitnami/wordpress/mysql-ssl-cert.pem"
-    subPath: mysql-ssl-cert.pem
+# extraVolumeMounts:
+#   - name: mysql-ssl-cert
+#     mountPath: "/bitnami/wordpress/mysql-ssl-cert.pem"
+#     subPath: mysql-ssl-cert.pem
