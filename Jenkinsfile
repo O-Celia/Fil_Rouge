@@ -60,7 +60,7 @@ pipeline {
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
                                 helm repo update
-                                helm install traefik traefik/traefik
+                                helm install traefik traefik/traefik --version 25.0.0
                             ''')
                         } else {
                             // If Traefik is already installed, upgrade it with the new configuration
@@ -68,7 +68,7 @@ pipeline {
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
                                 helm repo update
-                                helm upgrade traefik traefik/traefik
+                                helm upgrade traefik traefik/traefik --version 25.0.0
                             ''')
                         }
                     }
@@ -133,7 +133,7 @@ pipeline {
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
                                 helm repo update
-                                helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress
+                                helm upgrade traefik traefik/traefik -f traefik-values.yaml --version 25.0.0
                             ''')
                         }
                     }

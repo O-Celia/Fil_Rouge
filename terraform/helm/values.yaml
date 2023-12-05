@@ -27,7 +27,6 @@ ingress:
     kubernetes.io/ingress.class: "traefik"
     cert-manager.io/issuer: "certmanager"
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect@kubernetescrd
-  tls: true
   hostname: myblog.cecicelia.site
   extraTls:
     - hosts:
