@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             steps {
@@ -129,7 +129,7 @@ pipeline {
                             echo "Traefik is already installed. Upgrading Traefik."
                             // Update certmanager.yaml with the actual email
                             sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
-                            sh "kubectl apply -f certmanager"
+                            sh "kubectl apply -f certmanager.yaml"
                             // Update traefik with values.yaml
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
