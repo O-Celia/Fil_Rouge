@@ -28,8 +28,10 @@ ingress:
     cert-manager.io/issuer: "certmanager"
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect@kubernetescrd
   hostname: myblog.cecicelia.site
-  extraTls: [myblog.cecicelia.site]
-  secret: tls-ingress-http
+  extraTls:
+    - hosts:
+        - myblog.cecicelia.site
+      secretName: tls-ingress-http
 
 ## Wordpress Service
 service:
