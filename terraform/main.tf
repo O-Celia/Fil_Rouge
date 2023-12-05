@@ -3,55 +3,55 @@ resource "azurerm_resource_group" "aks" {
   location = var.location
 }
 
-resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet_mysql"
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-  address_space       = ["10.0.0.0/16"]
-}
+# resource "azurerm_virtual_network" "vnet" {
+#   name                = "vnet_mysql"
+#   location            = azurerm_resource_group.aks.location
+#   resource_group_name = azurerm_resource_group.aks.name
+#   address_space       = ["10.0.0.0/16"]
+# }
 
-resource "azurerm_subnet" "subnet" {
-  name                 = "subnet_mysql"
-  resource_group_name  = azurerm_resource_group.aks.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.2.0/24"]
-  service_endpoints    = ["Microsoft.Storage"]
-  delegation {
-    name = "fs"
-    service_delegation {
-      name = "Microsoft.DBforMySQL/flexibleServers"
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
-    }
-  }
-}
+# resource "azurerm_subnet" "subnet" {
+#   name                 = "subnet_mysql"
+#   resource_group_name  = azurerm_resource_group.aks.name
+#   virtual_network_name = azurerm_virtual_network.vnet.name
+#   address_prefixes     = ["10.0.2.0/24"]
+#   service_endpoints    = ["Microsoft.Storage"]
+#   delegation {
+#     name = "fs"
+#     service_delegation {
+#       name = "Microsoft.DBforMySQL/flexibleServers"
+#       actions = [
+#         "Microsoft.Network/virtualNetworks/subnets/join/action",
+#       ]
+#     }
+#   }
+# }
 
-resource "azurerm_mysql_flexible_server" "mysql" {
-  name                = "mysql-server-celia"
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-  administrator_login =  "wordpress"
-  administrator_password = "Witcher_95"
-  delegated_subnet_id    = azurerm_subnet.subnet.id
-  private_dns_zone_id    = azurerm_private_dns_zone.dns.id
-  sku_name            = "GP_Standard_D2ads_v5"
-  lifecycle {
-    ignore_changes = [
-      zone,
-    ]
-  }
+# resource "azurerm_mysql_flexible_server" "mysql" {
+#   name                = "mysql-server-celia"
+#   location            = azurerm_resource_group.aks.location
+#   resource_group_name = azurerm_resource_group.aks.name
+#   administrator_login =  "wordpress"
+#   administrator_password = "Witcher_95"
+#   delegated_subnet_id    = azurerm_subnet.subnet.id
+#   private_dns_zone_id    = azurerm_private_dns_zone.dns.id
+#   sku_name            = "GP_Standard_D2ads_v5"
+#   lifecycle {
+#     ignore_changes = [
+#       zone,
+#     ]
+#   }
 
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_link]
-}
+#   depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_link]
+# }
 
-resource "azurerm_mysql_flexible_database" "database" {
-  name                = "mysql-database-celia"
-  resource_group_name = azurerm_resource_group.aks.name
-  server_name         = azurerm_mysql_flexible_server.mysql.name
-  charset             = "utf8"
-  collation           = "utf8_general_ci"
-}
+# resource "azurerm_mysql_flexible_database" "database" {
+#   name                = "mysql-database-celia"
+#   resource_group_name = azurerm_resource_group.aks.name
+#   server_name         = azurerm_mysql_flexible_server.mysql.name
+#   charset             = "utf8"
+#   collation           = "utf8_general_ci"
+# }
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
@@ -73,7 +73,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 
-  depends_on = [azurerm_mysql_flexible_server.mysql]
+  #depends_on = [azurerm_mysql_flexible_server.mysql]
 }
 
 resource "azurerm_log_analytics_workspace" "wordpress_monitor" {
@@ -102,13 +102,13 @@ resource "azurerm_storage_container" "wpscan" {
   storage_account_name  = azurerm_storage_account.security_results.name
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "dns_link" {
-  name                  = "DBVnetZone.com"
-  private_dns_zone_name = azurerm_private_dns_zone.dns.name
-  virtual_network_id    = azurerm_virtual_network.vnet.id
-  resource_group_name   = azurerm_resource_group.aks.name
-}
-resource "azurerm_private_dns_zone" "dns" {
-  name                = "celia.mysql.database.azure.com"
-  resource_group_name = azurerm_resource_group.aks.name
-}
+# resource "azurerm_private_dns_zone_virtual_network_link" "dns_link" {
+#   name                  = "DBVnetZone.com"
+#   private_dns_zone_name = azurerm_private_dns_zone.dns.name
+#   virtual_network_id    = azurerm_virtual_network.vnet.id
+#   resource_group_name   = azurerm_resource_group.aks.name
+# }
+# resource "azurerm_private_dns_zone" "dns" {
+#   name                = "celia.mysql.database.azure.com"
+#   resource_group_name = azurerm_resource_group.aks.name
+# }
