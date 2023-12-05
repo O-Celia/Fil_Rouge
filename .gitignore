@@ -34,9 +34,6 @@ override.tf.json
 terraform.rc
 
 *.terraform.lock.hcl
-wpscan token.txt
 DigiCertGlobalRootCA.crt.pem
-ssl-certificate.txt
-ca-cert.txt
-ca.crt
-ca.key
+
+secret/
