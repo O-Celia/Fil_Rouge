@@ -72,6 +72,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags = {
     Environment = "Production"
   }
+
+  depends_on = [azurerm_mysql_flexible_server.mysql]
 }
 
 resource "azurerm_log_analytics_workspace" "wordpress_monitor" {
