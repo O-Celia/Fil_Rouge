@@ -141,5 +141,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Run WPScan') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
+                        sh "wpscan --url ${WORDPRESS_DNS} --api-token ${WPS_TOKEN} --ignore-main-redirect > wpscan_results.txt"
+                        // Upload the results to Azure Storage Container
+                        sh "az storage blob upload --account-name ${var.storage} --container-name ${var.container_storage} --name wpscan_results.txt --file wpscan_results.txt --auth-mode login"
+                    }
+                }
+            }
+        }
     }
 }
