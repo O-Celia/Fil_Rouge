@@ -147,16 +147,18 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
                                      string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
-                                     azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
+                                     azureServicePrincipal(credentialsId: 'ServicePrincipal'),
+                                     string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
+                                     string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY',
+                                     string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
                         sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
                         // Set environment variables for the credentials
                         sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
-                        // Set environment variables from Terraform outputs
-                        env.STORAGE_ACCOUNT_NAME = sh(script: "terraform output -raw storage_account_name", returnStdout: true).trim()
-                        env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
+                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
+                        // Login to Azure Storage
+                        // sh "az login --service-principal -u $STORAGE_ACCOUNT -p $STORAGE_KEY --tenant $AZURE_TENANT_ID"
                         // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name $STORAGE_ACCOUNT_NAME --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode login"
+                        sh "az storage blob upload --account-name $STORAGE_ACCOUNT --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode login --overwrite false"
                     }
                 }
             }
