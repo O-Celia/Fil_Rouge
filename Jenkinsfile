@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        SONAR_ORGANIZATION_KEY = 'simplon-celiaouedraogo'
+        SONAR_TOKEN = credentials('sonarcloud')
+    }
     
     stages {
 
@@ -147,21 +151,45 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
                                      string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
-                                    //  azureServicePrincipal(credentialsId: 'ServicePrincipal'),
                                      string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
                                      string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY'),
                                      string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
-                        // sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
                         // Set environment variables for the credentials
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
-                        // Login to Azure Storage
-                        // sh "az login --service-principal -u $STORAGE_ACCOUNT -p $STORAGE_KEY --tenant $AZURE_TENANT_ID"
                         // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name $STORAGE_ACCOUNT --account-key $STORAGE_KEY --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite false"
+                        sh "az storage blob upload --account-name $STORAGE_ACCOUNT --account-key $STORAGE_KEY --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode key"
                     }
                 }
             }
         }
+        stage("Dependency Check"){
+            steps {
+                dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
+            }
+        }
+        stage("DC Results"){
+            steps {
+                dependencyCheckPublisher failedTotalCritical: 0, failedTotalHigh: 5, pattern: '', stopBuild: true
+            }
+        }
+        stage('SonarCloud analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
+                                 string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
+                    script {
+                        withSonarQubeEnv('sonarcloud') {
+                            sh '/usr/bin/sonar-scanner \
+                                -Dsonar.projectKey=$SONAR_PROJECT \
+                                -Dsonar.organization=$SONAR_ORGANIZATION_KEY \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=https://sonarcloud.io \
+                                -Dsonar.login=$SONAR_TOKEN'
+                            waitForQualityGate abortPipeline: true
+                            }
+                        }
+                    }
+                }
+            }
     }
 }

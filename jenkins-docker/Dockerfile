@@ -2,7 +2,7 @@ FROM jenkins/jenkins:lts
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
-    apt install -y jq parallel gnupg software-properties-common wget openssl && \
+    apt install -y jq parallel unzip nodejs gnupg software-properties-common wget openssl && \
     curl -sSL https://get.docker.com/ | sh
 
 # Install Terraform and AZ Cli
@@ -23,10 +23,16 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN apt-get install -y ruby-full build-essential ruby-dev && \
     gem install wpscan
 
-# Install Certbot and Certbot plugin for Gandi
-RUN apt update && \
-    apt install -y certbot python3-pip && \
-    pip3 install certbot-plugin-gandi
+# # Install Certbot and Certbot plugin for Gandi
+# RUN apt update && \
+#     apt install -y certbot python3-pip && \
+#     pip3 install certbot-plugin-gandi
+
+# Install SonarCloud
+RUN wget -O /tmp/sonarscanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.0.2311-linux.zip && \
+    unzip /tmp/sonarscanner.zip -d /opt && \
+    rm /tmp/sonarscanner.zip && \
+    ln -s /opt/sonar-scanner-4.6.0.2311-linux/bin/sonar-scanner /usr/bin/sonar-scanner
 
 # Switch back to the jenkins user
 USER jenkins
