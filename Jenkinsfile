@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         SONAR_ORGANIZATION_KEY = 'simplon-celiaouedraogo'
-        SONAR_TOKEN = credentials('sonarcloud')
     }
     
     stages {
@@ -44,6 +43,11 @@ pipeline {
                         dir('terraform') {
                             sh 'terraform init'
                             sh 'terraform apply -auto-approve'
+                            // Retrieve Terraform outputs
+                            env.STORAGE_ACCOUNT = sh(script: "terraform output -raw storage_account_name", returnStdout: true).trim()
+                            env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
+                            env.STORAGE_KEY = sh(script: "terraform output -raw storage_account_key", returnStdout: true).trim()
+
                         }
                     }
                 }
@@ -151,18 +155,19 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
                                      string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
-                                     string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
-                                     string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY'),
-                                     string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
+                                    //  string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
+                                    //  string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY'),
+                                    //  string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
                         // Set environment variables for the credentials
                         sh "az aks get-credentials -g project_celia -n cluster-project"
-                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
+                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
                         // Upload the file to Azure Storage Container
                         sh "az storage blob upload --account-name $STORAGE_ACCOUNT --account-key $STORAGE_KEY --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
                     }
                 }
             }
         }
+
         stage("Dependency Check"){
             steps {
                 dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
