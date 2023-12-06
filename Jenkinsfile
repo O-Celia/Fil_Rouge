@@ -165,7 +165,7 @@ pipeline {
         }
         stage("Dependency Check"){
             steps {
-                dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
+                dependencyCheck additionalArguments: '--log odc.log', odcInstallation: 'owasp-dependency-check'
             }
         }
         stage("DC Results"){
