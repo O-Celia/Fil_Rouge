@@ -154,7 +154,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
                                     //  string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
                                     //  string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY'),
                                     //  string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
