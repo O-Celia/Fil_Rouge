@@ -149,7 +149,7 @@ pipeline {
                                      string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
                                      azureServicePrincipal(credentialsId: 'ServicePrincipal'),
                                      string(credentialsId: 'azureStorageAccountName', variable: 'STORAGE_ACCOUNT'),
-                                     string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY',
+                                    //  string(credentialsId: 'azureStorageKey', variable: 'STORAGE_KEY'),
                                      string(credentialsId: 'azureContainerName', variable: 'CONTAINER_NAME')]) {
                         sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
                         // Set environment variables for the credentials
