@@ -161,6 +161,7 @@ pipeline {
                         // Set environment variables for the credentials
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
+                        sh "cat wpscan_results.txt"
                         // Upload the file to Azure Storage Container
                         sh "az storage blob upload --account-name $STORAGE_ACCOUNT --account-key $STORAGE_KEY --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
                     }
