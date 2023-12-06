@@ -152,8 +152,11 @@ pipeline {
                         env.WPS_TOKEN = WPS_TOKEN
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
-                        // Upload the results to Azure Storage Container
-                        sh "az storage blob upload --account-name ${var.storage} --container-name ${var.container_storage} --name wpscan_results.txt --file wpscan_results.txt --auth-mode login"
+                        // Set environment variables from Terraform outputs
+                        env.STORAGE_ACCOUNT_NAME = sh(script: "terraform output -raw storage_account_name", returnStdout: true).trim()
+                        env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
+                        // Upload the file to Azure Storage Container
+                        sh "az storage blob upload --account-name $STORAGE_ACCOUNT_NAME --container-name $CONTAINER_NAME --name wpscan_results.txt --file wpscan_results.txt --auth-mode login"
                     }
                 }
             }

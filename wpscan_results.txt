@@ -1,0 +1,86 @@
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.25
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[32m[+][0m URL: https://myblog.cecicelia.site/ [20.8.220.36]
+[32m[+][0m Started: Wed Dec  6 09:23:10 2023
+
+Interesting Finding(s):
+
+[32m[+][0m Headers
+ | Interesting Entry: server: Apache
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[32m[+][0m robots.txt found: https://myblog.cecicelia.site/robots.txt
+ | Interesting Entries:
+ |  - /wp-admin/
+ |  - /wp-admin/admin-ajax.php
+ | Found By: Robots Txt (Aggressive Detection)
+ | Confidence: 100%
+
+[32m[+][0m WordPress readme found: https://myblog.cecicelia.site/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[32m[+][0m The external WP-Cron seems to be enabled: https://myblog.cecicelia.site/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[32m[+][0m WordPress version 6.4.1 identified (Latest, released on 2023-11-09).
+ | Found By: Rss Generator (Passive Detection)
+ |  - https://myblog.cecicelia.site/feed/, <generator>https://wordpress.org/?v=6.4.1</generator>
+ |  - https://myblog.cecicelia.site/comments/feed/, <generator>https://wordpress.org/?v=6.4.1</generator>
+
+[32m[+][0m WordPress theme in use: twentytwentyfour
+ | Location: https://myblog.cecicelia.site/wp-content/themes/twentytwentyfour/
+ | Readme: https://myblog.cecicelia.site/wp-content/themes/twentytwentyfour/readme.txt
+ | Style URL: https://myblog.cecicelia.site/wp-content/themes/twentytwentyfour/style.css
+ | Style Name: Twenty Twenty-Four
+ | Style URI: https://wordpress.org/themes/twentytwentyfour/
+ | Description: Twenty Twenty-Four is designed to be flexible, versatile and applicable to any website. Its collecti...
+ | Author: the WordPress team
+ | Author URI: https://wordpress.org
+ |
+ | Found By: Urls In Homepage (Passive Detection)
+ | Confirmed By: Urls In 404 Page (Passive Detection)
+ |
+ | Version: 1.0 (80% confidence)
+ | Found By: Style (Passive Detection)
+ |  - https://myblog.cecicelia.site/wp-content/themes/twentytwentyfour/style.css, Match: 'Version: 1.0'
+
+[32m[+][0m Enumerating All Plugins (via Passive Methods)
+
+[34m[i][0m No plugins Found.
+
+[32m[+][0m Enumerating Config Backups (via Passive and Aggressive Methods)
+
+ Checking Config Backups -: |=======================================================================================================|
+
+[34m[i][0m No Config Backups Found.
+
+[32m[+][0m WPScan DB API OK
+ | Plan: free
+ | Requests Done (during the scan): 0
+ | Requests Remaining: 23
+
+[32m[+][0m Finished: Wed Dec  6 09:23:26 2023
+[32m[+][0m Requests Done: 141
+[32m[+][0m Cached Requests: 38
+[32m[+][0m Data Sent: 37.992 KB
+[32m[+][0m Data Received: 93.322 KB
+[32m[+][0m Memory used: 261.668 MB
+[32m[+][0m Elapsed time: 00:00:16
