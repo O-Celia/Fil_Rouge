@@ -165,7 +165,7 @@ pipeline {
         }
         stage("Dependency Check"){
             steps {
-                dependencyCheck additionalArguments: '--log odc.log', odcInstallation: 'owasp-dependency-check'
+                dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
             }
         }
         stage("DC Results"){
@@ -186,10 +186,10 @@ pipeline {
                                 -Dsonar.host.url=https://sonarcloud.io \
                                 -Dsonar.login=$SONAR_TOKEN'
                             waitForQualityGate abortPipeline: true
-                            }
                         }
                     }
                 }
             }
+        }
     }
 }
