@@ -146,10 +146,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN'),
+                                     azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
+                        sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
                         // Set environment variables for the credentials
-                        env.WORDPRESS_DNS = WORDPRESS_DNS
-                        env.WPS_TOKEN = WPS_TOKEN
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect > wpscan_results.txt"
                         // Set environment variables from Terraform outputs
