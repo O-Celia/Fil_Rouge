@@ -10,6 +10,15 @@ pipeline {
         //     }
         // }
 
+        stage('Check Git Version') {
+            steps {
+                script {
+                    sh 'git --version'
+                    sh 'whereis git'
+                }
+            }
+        }
+
         stage('Cloning the git') {
             steps {
                 script {
