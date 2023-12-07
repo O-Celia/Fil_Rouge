@@ -128,6 +128,28 @@ pipeline {
             }
         }
 
+        // stage('Add TLS to Traefik ingress') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
+        //                 dir('terraform/helm') {
+        //                     sh "az aks get-credentials -g project_celia -n cluster-project"
+        //                     echo "Traefik is already installed. Upgrading Traefik."
+        //                     // Update certmanager.yaml with the actual email
+        //                     sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
+        //                     sh "kubectl apply -f certmanager.yaml"
+        //                     // Update traefik with values.yaml
+        //                     sh('''
+        //                         helm repo add traefik https://traefik.github.io/charts
+        //                         helm repo update
+        //                         helm upgrade traefik traefik/traefik -f traefik-values.yaml --version 25.0.0
+        //                     ''')
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
         stage('Add TLS to Traefik ingress') {
             steps {
                 script {
@@ -135,9 +157,30 @@ pipeline {
                         dir('terraform/helm') {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
                             echo "Traefik is already installed. Upgrading Traefik."
+
+                            // Pre-deployment check for cert-manager-webhook
+                            echo "Checking cert-manager-webhook readiness..."
+                            int attempts = 0
+                            def webhookReady = false
+                            while (!webhookReady && attempts < 10) {
+                                try {
+                                    sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStdout: true).trim()
+                                    webhookReady = true
+                                    echo "cert-manager-webhook is ready."
+                                } catch (Exception e) {
+                                    attempts++
+                                    echo "Waiting for cert-manager-webhook to be ready, attempt ${attempts}..."
+                                    sleep(30) // wait for 30 seconds before retrying
+                                }
+                            }
+                            if (!webhookReady) {
+                                error("cert-manager-webhook is not ready, aborting deployment.")
+                            }
+
                             // Update certmanager.yaml with the actual email
                             sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
                             sh "kubectl apply -f certmanager.yaml"
+
                             // Update traefik with values.yaml
                             sh('''
                                 helm repo add traefik https://traefik.github.io/charts
@@ -149,6 +192,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Run WPScan') {
             steps {
@@ -181,6 +225,7 @@ pipeline {
         stage('SonarCloud analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
+                                 string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
                                  string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
                     script {
                         withSonarQubeEnv('sonarcloud') {

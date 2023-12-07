@@ -3,7 +3,7 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
     apt install -y jq parallel unzip nodejs gnupg software-properties-common wget openssl && \
-    apt install git && \
+    apt install -y git && \
     curl -sSL https://get.docker.com/ | sh
 
 # Install Terraform and AZ Cli

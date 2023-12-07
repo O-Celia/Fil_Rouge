@@ -37,3 +37,4 @@ terraform.rc
 DigiCertGlobalRootCA.crt.pem
 
 secret/
+jenkins-docker/jenkins_configuration/
