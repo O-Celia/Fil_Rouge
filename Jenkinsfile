@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        SONAR_ORGANIZATION_KEY = 'simplon-celiaouedraogo'
-    }
     
     stages {
 
