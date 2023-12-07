@@ -34,6 +34,3 @@ RUN wget -O /tmp/sonarscanner.zip https://binaries.sonarsource.com/Distribution/
     unzip /tmp/sonarscanner.zip -d /opt && \
     rm /tmp/sonarscanner.zip && \
     ln -s /opt/sonar-scanner-4.6.0.2311-linux/bin/sonar-scanner /usr/bin/sonar-scanner
-
-# Switch back to the jenkins user
-USER jenkins
