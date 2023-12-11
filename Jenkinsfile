@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             steps {
@@ -61,27 +61,6 @@ pipeline {
                              helm repo update
                              helm upgrade --install traefik traefik/traefik --version 25.0.0
                         ''')
-                        
-                        // // Check if the Traefik release is already deployed
-                        // def isTraefikDeployed = sh(script: "helm list --namespace default -q | grep -w traefik", returnStatus: true) == 0
-
-                        // if (!isTraefikDeployed) {
-                        //     // If the release is not deployed, install it
-                        //     echo "Traefik is not installed. Installing Traefik."
-                        //     sh('''
-                        //         helm repo add traefik https://traefik.github.io/charts
-                        //         helm repo update
-                        //         helm install traefik traefik/traefik --version 25.0.0
-                        //     ''')
-                        // } else {
-                        //     // If Traefik is already installed, upgrade it with the new configuration
-                        //     echo "Traefik is already installed. Upgrading Traefik."
-                        //     sh('''
-                        //         helm repo add traefik https://traefik.github.io/charts
-                        //         helm repo update
-                        //         helm upgrade traefik traefik/traefik --version 25.0.0
-                        //     ''')
-                        // }
                     }
                 }
             }
@@ -93,19 +72,6 @@ pipeline {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
-
-                        // // Check if the Helm release is already deployed
-                        // def isDeployed = sh(script: "helm list --namespace default -q | grep -w myblog", returnStatus: true) == 0
-
-                        // if (isDeployed) {
-                        //     // If the release is deployed, upgrade it
-                        //     echo "Release 'myblog' exists. Upgrading chart."
-                        //     sh 'helm upgrade myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
-                        // } else {
-                        //     // If the release is not deployed, install it
-                        //     echo "Release 'myblog' does not exist. Installing chart."
-                        //     sh 'helm install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
-                        // }
 
                         // Apply autoscaler, redirection of https, password of grafana and certmanager
                         sh "kubectl apply -f autoscaler.yaml"
@@ -224,81 +190,17 @@ pipeline {
                             helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
                             ''')
 
-                        // // Check if the Prometheus Helm release is already deployed
-                        // def isPrometheusDeployed = sh(script: "helm list --namespace default -q | grep -w prometheus", returnStatus: true) == 0
-
-                        // if (isPrometheusDeployed) {
-                        //     // If the release is deployed, upgrade it
-                        //     echo "Release 'Prometheus' exists. Upgrading chart."
-                        //     sh('''
-                        //     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade prometheus prometheus-community/kube-prometheus-stack
-                        //     ''')
-                        // } else {
-                        //     // If the release is not deployed, install it
-                        //     echo "Release 'Prometheus' does not exist. Installing chart."
-                        //     sh('''
-                        //     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                        //     helm repo update
-                        //     helm install prometheus prometheus-community/kube-prometheus-stack
-                        //     ''')
-                        // }
-
                         sh('''
                             helm repo add grafana https://grafana.github.io/helm-charts
                             helm repo update
                             helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
                         ''')
 
-
-                        // // Check if the Grafana Helm release is already deployed
-                        // def isGrafanaDeployed = sh(script: "helm list --namespace default -q | grep -w grafana", returnStatus: true) == 0
-
-                        // if (isGrafanaDeployed) {
-                        //     // If the release is deployed, upgrade it
-                        //     echo "Release 'Grafana' exists. Upgrading chart."
-                        //     sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade grafana grafana/grafana -f grafana-values.yaml
-                        //     ''')
-                        // } else {
-                        //     // If the release is not deployed, install it
-                        //     echo "Release 'Grafana' does not exist. Installing chart."
-                        //     sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm install grafana grafana/grafana -f grafana-values.yaml
-                        //     ''')
-                        // }
-
                         sh('''
                             helm repo add grafana https://grafana.github.io/helm-charts
                             helm repo update
                             helm upgrade --install loki grafana/loki
                         ''')
-
-                        // // Check if the Loki Helm release is already deployed
-                        // def isLokiDeployed = sh(script: "helm list --namespace default -q | grep -w loki", returnStatus: true) == 0
-
-                        // if (isLokiDeployed) {
-                        //     // If the release is deployed, upgrade it
-                        //     echo "Release 'Loki' exists. Upgrading chart."
-                        //     sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade loki grafana/loki
-                        //     ''')
-                        // } else {
-                        //     // If the release is not deployed, install it
-                        //     echo "Release 'Loki' does not exist. Installing chart."
-                        //     sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm install loki grafana/loki
-                        //     ''')
-                        // }
                     }
                 }
             }
