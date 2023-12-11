@@ -2,7 +2,7 @@
 #   type: LoadBalancer
 
 admin:
-  existingSecret: grafana-password
+  existingSecret: "grafana-password"
   userKey: admin-user
   passwordKey: admin-password
 
