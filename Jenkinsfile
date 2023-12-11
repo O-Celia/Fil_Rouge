@@ -191,32 +191,21 @@ pipeline {
         }
 
 
-        stage('Run WPScan') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
-                        // Set environment variables for the credentials
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
-                        // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
-                    }
-                }
-            }
-        }
+        // stage('Run WPScan') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+        //                              string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+        //                 // Set environment variables for the credentials
+        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
+        //                 // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+        //                 // Upload the file to Azure Storage Container
+        //                 sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+        //             }
+        //         }
+        //     }
+        // }
 
-        // stage("Dependency Check"){
-        //     steps {
-        //         dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
-        //     }
-        // }
-        // stage("DC Results"){
-        //     steps {
-        //         dependencyCheckPublisher failedTotalCritical: 0, failedTotalHigh: 5, pattern: '', stopBuild: true
-        //     }
-        // }
-        
         stage('SonarCloud analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
@@ -236,5 +225,48 @@ pipeline {
                 }
             }
         }
+
+        // stage('Set up Prometheus and Grafana with Helm') {
+        //     steps {
+        //         script {
+        //             dir('terraform/helm') {
+        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
+
+        //                 // Deploy Prometheus
+        //                 sh('''
+        //                     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        //                     helm repo update
+        //                     helm install prometheus prometheus-community/kube-prometheus-stack
+        //                 ''')
+
+        //                 // Deploy Grafana
+        //                 sh('''
+        //                     helm repo add grafana https://grafana.github.io/helm-charts
+        //                     helm repo update
+        //                     helm install grafana grafana/grafana
+        //                 ''')
+
+        //                 // Deploy Loki
+        //                 sh('''
+        //                     helm repo add loki https://grafana.github.io/loki/charts
+        //                     helm repo update
+        //                     helm install loki loki/loki-stack
+        //                 ''')
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        // stage('Test de charge') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
+        //                 sh('''seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF $WORDPRESS_DNS"
+        //                 ''')
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
