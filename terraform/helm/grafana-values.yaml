@@ -1,28 +1,28 @@
 # service:
 #   type: LoadBalancer
 
-grafana:
-  adminPassword: 'Witcher_95'
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-      - name: Prometheus
-        type: prometheus
-        url: http://prometheus-server
-        access: proxy
-        isDefault: true
-      - name: Loki
-        type: loki
-        url: http://loki
-        access: proxy
 
-persistence:
-  enabled: true
-  type: pvc
-  accessModes:
-    - ReadWriteOnce
-  size: 10Gi
+adminPassword: 'Witcher_95'
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-kube-prometheus-prometheus:9090
+      access: proxy
+      isDefault: true
+    - name: Loki
+      type: loki
+      url: http://loki-backend:3100
+      access: proxy
+
+# persistence:
+#   enabled: true
+#   type: pvc
+#   accessModes:
+#     - ReadWriteOnce
+#   size: 10Gi
 
 dashboards:
   default:
