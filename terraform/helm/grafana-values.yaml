@@ -1,8 +1,11 @@
 # service:
 #   type: LoadBalancer
 
-adminUser: admin
-adminPassword: 'Witcher_95'
+admin:
+  existingSecret: grafana-password
+  userKey: admin-user
+  passwordKey: admin-password
+
 datasources:
   datasources.yaml:
     apiVersion: 1
