@@ -212,7 +212,7 @@ pipeline {
                                  string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
                                  string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
                     script {
-                        env.SONAR_SCANNER_HOME = tool 'SonarQubeScannerTool'
+                        env.SONAR_SCANNER_HOME = tool 'sonarcloud'
                         withSonarQubeEnv('sonarcloud') {
                             sh '$SONAR_SCANNER_HOME/sonar-scanner \
                                 -Dsonar.projectKey=$SONAR_PROJECT \
