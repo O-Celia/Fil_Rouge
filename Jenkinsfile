@@ -190,7 +190,6 @@ pipeline {
             }
         }
 
-
         // stage('Run WPScan') {
         //     steps {
         //         script {
@@ -231,31 +230,72 @@ pipeline {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
 
-                        // Deploy Prometheus
-                        sh('''
+                         // Check if the Prometheus Helm release is already deployed
+                        def isPrometheusDeployed = sh(script: "helm list --namespace default -q | grep -w prometheus", returnStatus: true) == 0
+
+                        if (isPrometheusDeployed) {
+                            // If the release is deployed, upgrade it
+                            echo "Release 'Prometheus' exists. Upgrading chart."
+                            sh('''
+                            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                            helm repo update
+                            helm upgrade prometheus prometheus-community/kube-prometheus-stack
+                            ''')
+                        } else {
+                            // If the release is not deployed, install it
+                            echo "Release 'Prometheus' does not exist. Installing chart."
+                            sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                             helm repo update
                             helm install prometheus prometheus-community/kube-prometheus-stack
-                        ''')
+                            ''')
+                        }
 
-                        // Deploy Grafana
-                        sh('''
+                        // Check if the Grafana Helm release is already deployed
+                        def isGrafanaDeployed = sh(script: "helm list --namespace default -q | grep -w grafana", returnStatus: true) == 0
+
+                        if (isGrafanaDeployed) {
+                            // If the release is deployed, upgrade it
+                            echo "Release 'Grafana' exists. Upgrading chart."
+                            sh('''
+                            helm repo add grafana https://grafana.github.io/helm-charts
+                            helm repo update
+                            helm upgrade grafana grafana/grafana -f grafana-values.yaml
+                            ''')
+                        } else {
+                            // If the release is not deployed, install it
+                            echo "Release 'Grafana' does not exist. Installing chart."
+                            sh('''
                             helm repo add grafana https://grafana.github.io/helm-charts
                             helm repo update
                             helm install grafana grafana/grafana -f grafana-values.yaml
-                        ''')
+                            ''')
+                        }
 
-                        // Deploy Loki
-                        sh('''
-                            helm repo add loki https://grafana.github.io/loki/charts
+                        // Check if the Loki Helm release is already deployed
+                        def isLokiDeployed = sh(script: "helm list --namespace default -q | grep -w loki", returnStatus: true) == 0
+
+                        if (isLokiDeployed) {
+                            // If the release is deployed, upgrade it
+                            echo "Release 'Loki' exists. Upgrading chart."
+                            sh('''
+                            helm repo add grafana https://grafana.github.io/helm-charts
                             helm repo update
-                            helm install loki loki/loki-stack
-                        ''')
+                            helm upgrade loki grafana/loki
+                            ''')
+                        } else {
+                            // If the release is not deployed, install it
+                            echo "Release 'Loki' does not exist. Installing chart."
+                            sh('''
+                            helm repo add grafana https://grafana.github.io/helm-charts
+                            helm repo update
+                            helm install loki grafana/loki
+                            ''')
+                        }
                     }
                 }
             }
         }
-
 
         // stage('Test de charge') {
         //     steps {
