@@ -148,6 +148,49 @@ pipeline {
         //     }
         // }
 
+        // stage('Add TLS to Traefik ingress') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
+        //                 dir('terraform/helm') {
+        //                     sh "az aks get-credentials -g project_celia -n cluster-project"
+        //                     echo "Traefik is already installed. Upgrading Traefik."
+
+        //                     // Pre-deployment check for cert-manager-webhook
+        //                     echo "Checking cert-manager-webhook readiness..."
+        //                     int attempts = 0
+        //                     def webhookReady = false
+        //                     while (!webhookReady && attempts < 10) {
+        //                         try {
+        //                             sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStdout: true).trim()
+        //                             webhookReady = true
+        //                             echo "cert-manager-webhook is ready."
+        //                         } catch (Exception e) {
+        //                             attempts++
+        //                             echo "Waiting for cert-manager-webhook to be ready, attempt ${attempts}..."
+        //                             sleep(30) // wait for 30 seconds before retrying
+        //                         }
+        //                     }
+        //                     if (!webhookReady) {
+        //                         error("cert-manager-webhook is not ready, aborting deployment.")
+        //                     }
+
+        //                     // Update certmanager.yaml with the actual email
+        //                     sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
+        //                     sh "kubectl apply -f certmanager.yaml"
+
+        //                     // Update traefik with values.yaml
+        //                     sh('''
+        //                         helm repo add traefik https://traefik.github.io/charts
+        //                         helm repo update
+        //                         helm upgrade traefik traefik/traefik -f traefik-values.yaml --version 25.0.0
+        //                     ''')
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
         stage('Add TLS to Traefik ingress') {
             steps {
                 script {
@@ -156,19 +199,22 @@ pipeline {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
                             echo "Traefik is already installed. Upgrading Traefik."
 
-                            // Pre-deployment check for cert-manager-webhook
+                            // Extended check for cert-manager-webhook readiness
                             echo "Checking cert-manager-webhook readiness..."
                             int attempts = 0
-                            def webhookReady = false
+                            boolean webhookReady = false
                             while (!webhookReady && attempts < 10) {
-                                try {
-                                    sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStdout: true).trim()
+                                // Check if the pod is ready
+                                if (sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStatus: true) == 0) {
+                                    // Delay of 30s for the TLS certificates
+                                    sleep(30)
+                                    // Perform a test request or additional check to confirm the webhook is operational
                                     webhookReady = true
                                     echo "cert-manager-webhook is ready."
-                                } catch (Exception e) {
+                                } else {
                                     attempts++
                                     echo "Waiting for cert-manager-webhook to be ready, attempt ${attempts}..."
-                                    sleep(30) // wait for 30 seconds before retrying
+                                    sleep(30)
                                 }
                             }
                             if (!webhookReady) {
@@ -191,20 +237,20 @@ pipeline {
             }
         }
 
-        stage('Run WPScan') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
-                        // Set environment variables for the credentials
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
-                        // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
-                    }
-                }
-            }
-        }
+        // stage('Run WPScan') {
+        //     steps {
+        //         script {
+        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+        //                              string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+        //                 // Set environment variables for the credentials
+        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
+        //                 // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+        //                 // Upload the file to Azure Storage Container
+        //                 sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('SonarCloud analysis') {
             steps {
