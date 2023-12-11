@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-  default = "project_celia"
+  default = "project_celia_vm"
 }
 
 variable "location" {
