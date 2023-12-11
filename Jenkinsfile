@@ -225,36 +225,36 @@ pipeline {
             }
         }
 
-        // stage('Set up Prometheus and Grafana with Helm') {
-        //     steps {
-        //         script {
-        //             dir('terraform/helm') {
-        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
+        stage('Set up Prometheus and Grafana with Helm') {
+            steps {
+                script {
+                    dir('terraform/helm') {
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
 
-        //                 // Deploy Prometheus
-        //                 sh('''
-        //                     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-        //                     helm repo update
-        //                     helm install prometheus prometheus-community/kube-prometheus-stack
-        //                 ''')
+                        // Deploy Prometheus
+                        sh('''
+                            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                            helm repo update
+                            helm install prometheus prometheus-community/kube-prometheus-stack
+                        ''')
 
-        //                 // Deploy Grafana
-        //                 sh('''
-        //                     helm repo add grafana https://grafana.github.io/helm-charts
-        //                     helm repo update
-        //                     helm install grafana grafana/grafana -f grafana-values.yaml
-        //                 ''')
+                        // Deploy Grafana
+                        sh('''
+                            helm repo add grafana https://grafana.github.io/helm-charts
+                            helm repo update
+                            helm install grafana grafana/grafana -f grafana-values.yaml
+                        ''')
 
-        //                 // Deploy Loki
-        //                 sh('''
-        //                     helm repo add loki https://grafana.github.io/loki/charts
-        //                     helm repo update
-        //                     helm install loki loki/loki-stack
-        //                 ''')
-        //             }
-        //         }
-        //     }
-        // }
+                        // Deploy Loki
+                        sh('''
+                            helm repo add loki https://grafana.github.io/loki/charts
+                            helm repo update
+                            helm install loki loki/loki-stack
+                        ''')
+                    }
+                }
+            }
+        }
 
 
         // stage('Test de charge') {
