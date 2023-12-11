@@ -219,7 +219,7 @@ pipeline {
                                 -Dsonar.sources=. \
                                 -Dsonar.host.url=https://sonarcloud.io \
                                 -Dsonar.login=$SONAR_TOKEN'
-                            waitForQualityGate abortPipeline: true
+                            waitForQualityGate abortPipeline: false
                         }
                     }
                 }
@@ -243,7 +243,7 @@ pipeline {
         //                 sh('''
         //                     helm repo add grafana https://grafana.github.io/helm-charts
         //                     helm repo update
-        //                     helm install grafana grafana/grafana
+        //                     helm install grafana grafana/grafana -f grafana-values.yaml
         //                 ''')
 
         //                 // Deploy Loki

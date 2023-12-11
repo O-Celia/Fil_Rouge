@@ -1,0 +1,8 @@
+prometheus:
+  prometheusSpec:
+    scrapeConfigs:
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+    # service:
+    #   type: LoadBalancer

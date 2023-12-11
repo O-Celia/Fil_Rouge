@@ -1,0 +1,1299 @@
+# service:
+#   type: LoadBalancer
+
+grafana:
+  adminPassword: 'Witcher_95'
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server
+        access: proxy
+        isDefault: true
+      - name: Loki
+        type: loki
+        url: http://loki
+        access: proxy
+
+dashboards:
+  default:
+    my-dashboard-1:
+      json: |
+        {
+          "id": 36,
+          "type": "table",
+          "title": "Versions",
+          "targets": [
+            {
+              "refId": "A",
+              "editorMode": "code",
+              "expr": "topk(1, wp_info{host=\"$host\"})",
+              "legendFormat": "__auto",
+              "range": false,
+              "instant": true,
+              "exemplar": false,
+              "format": "table"
+            }
+          ],
+          "options": {
+            "showHeader": true,
+            "footer": {
+              "show": false,
+              "reducer": [
+                "sum"
+              ],
+              "fields": ""
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "color": {
+                "mode": "thresholds"
+              }
+            },
+            "overrides": []
+          },
+          "pluginVersion": "9.3.1",
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "job": true,
+                  "instance": true,
+                  "host": true,
+                  "__name__": true,
+                  "scheme": true,
+                  "Value": true
+                },
+                "indexByName": {
+                  "version": 0,
+                  "db_version": 1,
+                  "Time": 2,
+                  "__name__": 3,
+                  "host": 4,
+                  "instance": 5,
+                  "job": 6,
+                  "scheme": 7,
+                  "Value": 8
+                },
+                "renameByName": {
+                  "__name__": "",
+                  "db_version": "Database Version ",
+                  "version": "WordPress Version "
+                }
+              }
+            }
+          ]
+        }
+    my-dashboard-2:
+      json: |
+        {
+        "__inputs": [
+          {
+            "name": "DS_WORDPRESS",
+            "label": "Wordpress",
+            "description": "Name MySQL datasource \"Wordpresss\"",
+            "type": "datasource",
+            "pluginId": "mysql",
+            "pluginName": "MySQL"
+          }
+        ],
+        "__requires": [
+          {
+            "type": "panel",
+            "id": "bargauge",
+            "name": "Bar gauge",
+            "version": ""
+          },
+          {
+            "type": "grafana",
+            "id": "grafana",
+            "name": "Grafana",
+            "version": "7.2.1"
+          },
+          {
+            "type": "panel",
+            "id": "grafana-piechart-panel",
+            "name": "Pie Chart",
+            "version": "1.6.1"
+          },
+          {
+            "type": "panel",
+            "id": "graph",
+            "name": "Graph",
+            "version": ""
+          },
+          {
+            "type": "datasource",
+            "id": "mysql",
+            "name": "MySQL",
+            "version": "1.0.0"
+          },
+          {
+            "type": "panel",
+            "id": "stat",
+            "name": "Stat",
+            "version": ""
+          },
+          {
+            "type": "panel",
+            "id": "table",
+            "name": "Table",
+            "version": ""
+          }
+        ],
+        "annotations": {
+          "list": [
+            {
+              "builtIn": 1,
+              "datasource": "-- Grafana --",
+              "enable": true,
+              "hide": true,
+              "iconColor": "rgba(0, 211, 255, 1)",
+              "name": "Annotations & Alerts",
+              "type": "dashboard"
+            }
+          ]
+        },
+        "editable": true,
+        "gnetId": 13191,
+        "graphTooltip": 0,
+        "id": null,
+        "links": [],
+        "panels": [
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null,
+                  "filterable": false
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Link"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 472
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Visits"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 199
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "post_title"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 378
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Post Title"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 185
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 6,
+              "x": 0,
+              "y": 0
+            },
+            "id": 13,
+            "options": {
+              "showHeader": true,
+              "sortBy": []
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT b.post_title as 'Post Title', sum(a.count) as Visits \nFROM hawarfql_wp588.wpl7_statistics_pages a, hawarfql_wp588.wpl7_posts b \nwhere a.id=b.ID \ngroup by a.id \norder by Visits desc\nlimit 5;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_date",
+                "timeColumnType": "timestamp",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top 5 Pages",
+            "transparent": true,
+            "type": "table"
+          },
+          {
+            "aliasColors": {},
+            "breakPoint": "100%",
+            "cacheTimeout": null,
+            "combine": {
+              "label": "Others",
+              "threshold": 0
+            },
+            "datasource": "${DS_WORDPRESS}",
+            "decimals": null,
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "fontSize": "120%",
+            "format": "short",
+            "gridPos": {
+              "h": 12,
+              "w": 4,
+              "x": 6,
+              "y": 0
+            },
+            "id": 11,
+            "interval": null,
+            "legend": {
+              "header": "",
+              "percentage": true,
+              "percentageDecimals": 1,
+              "show": true,
+              "sideWidth": 100,
+              "values": false
+            },
+            "legendType": "Under graph",
+            "links": [],
+            "nullPointMode": "connected",
+            "pieType": "pie",
+            "pluginVersion": "7.1.5",
+            "repeat": null,
+            "strokeWidth": "1",
+            "targets": [
+              {
+                "format": "time_series",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "select now() AS \"time\", \ncase \nwhen agent like 'Chrome' then 'Chrome'\nwhen agent like 'FireFox' then 'FireFox'\nwhen agent like 'Safari' then 'Safari'\nwhen agent like 'Samsung Internet' then 'Samsung Internet'\nwhen agent like 'Unknown' then 'Other'\nend\nagent, count(*) FROM hawarfql_wp588.wpl7_statistics_visitor\nwhere agent in ('Chrome', 'FireFox', 'Safari', 'Samsung Internet', 'Unknown') group by agent;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "hits"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_statistics_visitor",
+                "timeColumn": "honeypot",
+                "timeColumnType": "int",
+                "where": []
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top Browsers",
+            "transparent": true,
+            "type": "grafana-piechart-panel",
+            "valueName": "total"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "displayName": "Total Visitors",
+                "mappings": [],
+                "max": 1000000,
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(22, 182, 210)",
+                      "value": null
+                    }
+                  ]
+                },
+                "unit": "short"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 4,
+              "w": 3,
+              "x": 10,
+              "y": 0
+            },
+            "id": 7,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "mean"
+                ],
+                "fields": "",
+                "values": true
+              },
+              "textMode": "auto"
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT count(id) as 'Total Visitor' FROM hawarfql_wp588.wpl7_statistics_visitor;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_post_ID",
+                "timeColumnType": "bigint",
+                "where": [
+                  {
+                    "name": "$__unixEpochFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "",
+            "type": "stat"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null,
+                  "filterable": false
+                },
+                "displayName": "$__cell_0",
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 10
+                    },
+                    {
+                      "color": "purple",
+                      "value": 30
+                    },
+                    {
+                      "color": "#6ED0E0",
+                      "value": 40
+                    },
+                    {
+                      "color": "blue",
+                      "value": 50
+                    },
+                    {
+                      "color": "rgb(4, 165, 249)",
+                      "value": 60
+                    },
+                    {
+                      "color": "rgb(34, 113, 232)",
+                      "value": 70
+                    },
+                    {
+                      "color": "rgb(19, 231, 215)",
+                      "value": 80
+                    },
+                    {
+                      "color": "rgb(66, 226, 197)",
+                      "value": 90
+                    },
+                    {
+                      "color": "rgb(40, 221, 7)",
+                      "value": 100
+                    }
+                  ]
+                },
+                "unit": "none"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 6,
+              "w": 10,
+              "x": 13,
+              "y": 0
+            },
+            "id": 9,
+            "options": {
+              "displayMode": "gradient",
+              "orientation": "vertical",
+              "reduceOptions": {
+                "calcs": [
+                  "mean"
+                ],
+                "fields": "",
+                "values": true
+              },
+              "showUnfilled": true
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT location, COUNT(location) AS count FROM hawarfql_wp588.wpl7_statistics_visitor where location not like '000' GROUP BY location ORDER BY count DESC limit 10;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_date",
+                "timeColumnType": "timestamp",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top 10 Countries (Count Visitor)",
+            "transformations": [],
+            "transparent": true,
+            "type": "bargauge"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "displayName": "Total Online Users",
+                "mappings": [],
+                "max": 1000000,
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(22, 126, 210)",
+                      "value": null
+                    }
+                  ]
+                },
+                "unit": "short"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 4,
+              "w": 3,
+              "x": 10,
+              "y": 4
+            },
+            "id": 17,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "mean"
+                ],
+                "fields": "",
+                "values": true
+              },
+              "textMode": "auto"
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT count(*) as 'Online Users' FROM hawarfql_wp588.wpl7_statistics_useronline;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_post_ID",
+                "timeColumnType": "bigint",
+                "where": [
+                  {
+                    "name": "$__unixEpochFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "",
+            "type": "stat"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null,
+                  "filterable": false
+                },
+                "displayName": "$__cell_0",
+                "mappings": [],
+                "min": 10,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 5
+                    },
+                    {
+                      "color": "rgb(224, 78, 149)",
+                      "value": 10
+                    },
+                    {
+                      "color": "rgb(158, 32, 131)",
+                      "value": 20
+                    },
+                    {
+                      "color": "rgb(99, 27, 184)",
+                      "value": 30
+                    },
+                    {
+                      "color": "rgb(142, 97, 235)",
+                      "value": 40
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 50
+                    },
+                    {
+                      "color": "orange",
+                      "value": 60
+                    },
+                    {
+                      "color": "rgb(16, 81, 156)",
+                      "value": 70
+                    },
+                    {
+                      "color": "rgb(33, 169, 245)",
+                      "value": 80
+                    },
+                    {
+                      "color": "rgb(2, 250, 196)",
+                      "value": 90
+                    },
+                    {
+                      "color": "rgb(57, 201, 0)",
+                      "value": 100
+                    }
+                  ]
+                },
+                "unit": "none"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 10,
+              "x": 13,
+              "y": 6
+            },
+            "id": 18,
+            "options": {
+              "displayMode": "gradient",
+              "orientation": "horizontal",
+              "reduceOptions": {
+                "calcs": [
+                  "mean"
+                ],
+                "fields": "",
+                "values": true
+              },
+              "showUnfilled": true
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT location, sum(hits) AS count FROM hawarfql_wp588.wpl7_statistics_visitor where location not like '000' GROUP BY location ORDER BY count DESC limit 10;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_date",
+                "timeColumnType": "timestamp",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top 10 Countries (Hits)",
+            "transformations": [],
+            "transparent": true,
+            "type": "bargauge"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null,
+                  "filterable": false
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Browser"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 185
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Country"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 157
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Referred"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 358
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Domain"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 225
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 12,
+              "w": 6,
+              "x": 0,
+              "y": 7
+            },
+            "id": 4,
+            "options": {
+              "showHeader": true,
+              "sortBy": []
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(referred, '/', 3), '://', -1), '/', 1), '?', 1),'www.',-1)\n AS Domain,\n count(*) AS 'References Hits' \n FROM hawarfql_wp588.wpl7_statistics_visitor\n group by domain order by 'References Hits' desc limit 10;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_date",
+                "timeColumnType": "timestamp",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top 10 Referring Sites",
+            "type": "table"
+          },
+          {
+            "datasource": "${DS_WORDPRESS}",
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "displayName": "Total Visits",
+                "mappings": [],
+                "max": 1000000,
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(43, 161, 86)",
+                      "value": null
+                    }
+                  ]
+                },
+                "unit": "short"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 4,
+              "w": 3,
+              "x": 10,
+              "y": 8
+            },
+            "id": 6,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "mean"
+                ],
+                "fields": "",
+                "values": true
+              },
+              "textMode": "auto"
+            },
+            "pluginVersion": "7.2.1",
+            "targets": [
+              {
+                "format": "table",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT sum(visit) as 'Total Visits' FROM wpl7_statistics_visit order by last_visit desc limit 15;\n",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_post_ID",
+                "timeColumnType": "bigint",
+                "where": [
+                  {
+                    "name": "$__unixEpochFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "",
+            "type": "stat"
+          },
+          {
+            "aliasColors": {},
+            "breakPoint": "25%",
+            "cacheTimeout": null,
+            "combine": {
+              "label": "Others",
+              "threshold": 0
+            },
+            "datasource": "${DS_WORDPRESS}",
+            "decimals": null,
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "fontSize": "120%",
+            "format": "none",
+            "gridPos": {
+              "h": 9,
+              "w": 6,
+              "x": 6,
+              "y": 12
+            },
+            "id": 14,
+            "interval": null,
+            "legend": {
+              "header": "",
+              "percentage": false,
+              "percentageDecimals": 100,
+              "show": true,
+              "sideWidth": 100,
+              "values": true
+            },
+            "legendType": "Right side",
+            "links": [],
+            "nullPointMode": "connected",
+            "pieType": "donut",
+            "pluginVersion": "7.2.1",
+            "strokeWidth": "1",
+            "targets": [
+              {
+                "format": "time_series",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "select now() AS \"time\", \ncase \nwhen engine like 'google' then 'Google'\nwhen engine like 'bing' then 'Bing'\nwhen engine like 'yahoo' then 'Yahoo!'\nend\nengine, \ncount(*) count FROM hawarfql_wp588.wpl7_statistics_search group by engine order by count desc;",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "hits"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_statistics_visitor",
+                "timeColumn": "honeypot",
+                "timeColumnType": "int",
+                "where": []
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Top Engines",
+            "transparent": true,
+            "type": "grafana-piechart-panel",
+            "valueName": "total"
+          },
+          {
+            "aliasColors": {
+              "Visit": "rgb(28, 184, 235)",
+              "Visitor": "rgb(159, 21, 227)",
+              "Visitorrs": "rgb(65, 250, 42)",
+              "Visits": "rgb(28, 235, 255)",
+              "visit": "rgb(32, 99, 243)"
+            },
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "${DS_WORDPRESS}",
+            "decimals": null,
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": null
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "fill": 2,
+            "fillGradient": 0,
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 12,
+              "y": 13
+            },
+            "hiddenSeries": false,
+            "id": 2,
+            "legend": {
+              "alignAsTable": true,
+              "avg": false,
+              "current": true,
+              "hideEmpty": false,
+              "hideZero": false,
+              "max": true,
+              "min": true,
+              "rightSide": false,
+              "show": true,
+              "total": true,
+              "values": true
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+              "alertThreshold": false
+            },
+            "percentage": false,
+            "pluginVersion": "7.2.1",
+            "pointradius": 2,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [
+              {
+                "alias": "Visit",
+                "yaxis": 1
+              }
+            ],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "format": "time_series",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT\n  last_visit AS \"time\",\n  Visit\nFROM wpl7_statistics_visit\nWHERE\n  $__timeFilter(last_visit)\nORDER BY last_visit",
+                "refId": "A",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "visit"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_statistics_visit",
+                "timeColumn": "last_visit",
+                "timeColumnType": "datetime",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              },
+              {
+                "format": "time_series",
+                "group": [],
+                "metricColumn": "none",
+                "rawQuery": true,
+                "rawSql": "SELECT DATE(last_counter) as time, count(*) as Visitor FROM hawarfql_wp588.wpl7_statistics_visitor group by last_counter;",
+                "refId": "B",
+                "select": [
+                  [
+                    {
+                      "params": [
+                        "comment_ID"
+                      ],
+                      "type": "column"
+                    }
+                  ]
+                ],
+                "table": "wpl7_comments",
+                "timeColumn": "comment_date",
+                "timeColumnType": "timestamp",
+                "where": [
+                  {
+                    "name": "$__timeFilter",
+                    "params": [],
+                    "type": "macro"
+                  }
+                ]
+              }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "Visit & Visitor in the last 10 days",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "transparent": true,
+            "type": "graph",
+            "xaxis": {
+              "buckets": 10,
+              "max": 10,
+              "min": 1,
+              "mode": "time",
+              "name": null,
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "$$hashKey": "object:252",
+                "format": "short",
+                "label": null,
+                "logBase": 2,
+                "max": null,
+                "min": null,
+                "show": false
+              },
+              {
+                "$$hashKey": "object:253",
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false,
+              "alignLevel": null
+            }
+          }
+        ],
+        "refresh": "",
+        "schemaVersion": 26,
+        "style": "dark",
+        "tags": [],
+        "templating": {
+          "list": []
+        },
+        "time": {
+          "from": "now-7d",
+          "to": "now"
+        },
+        "timepicker": {
+          "refresh_intervals": [
+            "5s",
+            "10s",
+            "30s",
+            "1m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "2h",
+            "1d"
+          ]
+        },
+        "timezone": "",
+        "title": "Wordpress statistics dashboard",
+        "uid": "wckvJzOMk",
+        "version": 120,
+        "description": "Wordpress statistics dashboard includes:\n - Top 5 pages\n - Top browsers\n - Top 10 Referring Sites\n - Top Engines\n - Total Visitors \n - Total Online Users\n - Total Visits\n - Top 10 Countries (Count Visitor)\n - Top 10 Countries (Hits)\n - Visit & Visitor in the last 10 days\n"
+        }
+
