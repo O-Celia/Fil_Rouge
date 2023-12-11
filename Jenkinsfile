@@ -212,14 +212,15 @@ pipeline {
                                  string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
                                  string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
                     script {
+                        env.SONAR_SCANNER_HOME = tool 'SonarQubeScannerTool'
                         withSonarQubeEnv('sonarcloud') {
-                            sh '/usr/bin/sonar-scanner \
+                            sh '$SONAR_SCANNER_HOME/sonar-scanner \
                                 -Dsonar.projectKey=$SONAR_PROJECT \
                                 -Dsonar.organization=$SONAR_ORGANIZATION_KEY \
                                 -Dsonar.sources=. \
                                 -Dsonar.host.url=https://sonarcloud.io \
                                 -Dsonar.login=$SONAR_TOKEN'
-                            waitForQualityGate abortPipeline: false
+                            // waitForQualityGate abortPipeline: false
                         }
                     }
                 }
