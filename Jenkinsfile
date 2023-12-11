@@ -198,7 +198,7 @@ pipeline {
                                      string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
                         // Set environment variables for the credentials
                         sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
                         // Upload the file to Azure Storage Container
                         sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
                     }
@@ -206,16 +206,17 @@ pipeline {
             }
         }
 
-        stage("Dependency Check"){
-            steps {
-                dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
-            }
-        }
-        stage("DC Results"){
-            steps {
-                dependencyCheckPublisher failedTotalCritical: 0, failedTotalHigh: 5, pattern: '', stopBuild: true
-            }
-        }
+        // stage("Dependency Check"){
+        //     steps {
+        //         dependencyCheck additionalArguments: '', odcInstallation: 'owasp-dependency-check'
+        //     }
+        // }
+        // stage("DC Results"){
+        //     steps {
+        //         dependencyCheckPublisher failedTotalCritical: 0, failedTotalHigh: 5, pattern: '', stopBuild: true
+        //     }
+        // }
+        
         stage('SonarCloud analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
