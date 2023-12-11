@@ -17,6 +17,13 @@ grafana:
         url: http://loki
         access: proxy
 
+persistence:
+  enabled: true
+  type: pvc
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
 dashboards:
   default:
     my-dashboard-1:
