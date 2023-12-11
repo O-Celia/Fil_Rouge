@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        // stage('Clean Workspace') {
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             steps {
@@ -191,20 +191,20 @@ pipeline {
             }
         }
 
-        // stage('Run WPScan') {
-        //     steps {
-        //         script {
-        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-        //                              string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
-        //                 // Set environment variables for the credentials
-        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
-        //                 // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
-        //                 // Upload the file to Azure Storage Container
-        //                 sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Run WPScan') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+                        // Set environment variables for the credentials
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
+                        // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+                        // Upload the file to Azure Storage Container
+                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+                    }
+                }
+            }
+        }
 
         stage('SonarCloud analysis') {
             steps {
