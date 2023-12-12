@@ -75,6 +75,10 @@ pipeline {
                         sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
                         sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
+                        // Ajout du plugin de limitation des tentatives de connexion
+                        sh "kubectl exec -it $(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
+                        sh "kubectl exec -it $(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
+
                         // Apply autoscaler, redirection of https, password of grafana and certmanager
                         sh "kubectl apply -f autoscaler.yaml"
                         sh "kubectl apply -f redirect.yaml"
