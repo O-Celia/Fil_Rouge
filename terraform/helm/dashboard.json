@@ -1,0 +1,82 @@
+{
+  "id": 36,
+  "type": "table",
+  "title": "Versions",
+  "targets": [
+    {
+      "refId": "A",
+      "editorMode": "code",
+      "expr": "topk(1, wp_info{host=\"$host\"})",
+      "legendFormat": "__auto",
+      "range": false,
+      "instant": true,
+      "exemplar": false,
+      "format": "table"
+    }
+  ],
+  "options": {
+    "showHeader": true,
+    "footer": {
+      "show": false,
+      "reducer": [
+        "sum"
+      ],
+      "fields": ""
+    }
+  },
+  "fieldConfig": {
+    "defaults": {
+      "custom": {
+        "align": "auto",
+        "displayMode": "auto",
+        "inspect": false
+      },
+      "mappings": [],
+      "thresholds": {
+        "mode": "absolute",
+        "steps": []
+      },
+      "color": {
+        "mode": "thresholds"
+      }
+    },
+    "overrides": []
+  },
+  "pluginVersion": "9.3.1",
+  "transformations": [
+    {
+      "id": "merge",
+      "options": {}
+    },
+    {
+      "id": "organize",
+      "options": {
+        "excludeByName": {
+          "Time": true,
+          "job": true,
+          "instance": true,
+          "host": true,
+          "__name__": true,
+          "scheme": true,
+          "Value": true
+        },
+        "indexByName": {
+          "version": 0,
+          "db_version": 1,
+          "Time": 2,
+          "__name__": 3,
+          "host": 4,
+          "instance": 5,
+          "job": 6,
+          "scheme": 7,
+          "Value": 8
+        },
+        "renameByName": {
+          "__name__": "",
+          "db_version": "Database Version ",
+          "version": "WordPress Version "
+        }
+      }
+    }
+  ]
+}
