@@ -72,7 +72,8 @@ pipeline {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         // sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
-                        'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
+                        sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
+                        sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
                         // Apply autoscaler, redirection of https, password of grafana and certmanager
                         sh "kubectl apply -f autoscaler.yaml"
