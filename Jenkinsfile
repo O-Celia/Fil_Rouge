@@ -5,17 +5,17 @@ pipeline {
     }
     stages {
 
-        stage('Clean Workspace') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             when {
@@ -153,15 +153,15 @@ pipeline {
                             while (!webhookReady && attempts < 10) {
                                 // Check if the pod is ready
                                 if (sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStatus: true) == 0) {
-                                    // Delay of 30s for the TLS certificates
-                                    sleep(60)
+                                    // Delay of 2min for the TLS certificates
+                                    sleep(120)
                                     // Perform a test request or additional check to confirm the webhook is operational
                                     webhookReady = true
                                     echo "cert-manager-webhook is ready."
                                 } else {
                                     attempts++
                                     echo "Waiting for cert-manager-webhook to be ready, attempt ${attempts}..."
-                                    sleep(60)
+                                    sleep(120)
                                 }
                             }
                             if (!webhookReady) {
