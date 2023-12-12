@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        // stage('Clean Workspace') {
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             steps {
@@ -71,7 +71,8 @@ pipeline {
                 script {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
+                        // sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
+                        'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
                         // Apply autoscaler, redirection of https, password of grafana and certmanager
                         sh "kubectl apply -f autoscaler.yaml"
@@ -187,14 +188,14 @@ pipeline {
                         sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                             helm repo update
-                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
+                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus-grafana-values.yaml
                             ''')
 
-                        sh('''
-                            helm repo add grafana https://grafana.github.io/helm-charts
-                            helm repo update
-                            helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
-                        ''')
+                        // sh('''
+                        //     helm repo add grafana https://grafana.github.io/helm-charts
+                        //     helm repo update
+                        //     helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
+                        // ''')
 
                         sh('''
                             helm repo add grafana https://grafana.github.io/helm-charts

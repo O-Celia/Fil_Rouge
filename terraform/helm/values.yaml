@@ -12,12 +12,6 @@ mariadb:
   auth.rootPassword: Witcher_95
   database: mariadb-celia
   username: wordpress
-# externalDatabase:
-#   host: celia.mysql.database.azure.com
-#   user: wordpress
-#   password: Witcher_95
-#   database: mysql-database-celia
-#   port: 3306
 
 ## Ingress Configuration
 ingress:
@@ -36,17 +30,3 @@ ingress:
 ## Wordpress Service
 service:
   type: ClusterIP
-
-# ## SSL Certificate
-# env:
-#   WORDPRESS_DATABASE_SSL_CA_FILE: "/bitnami/wordpress/mysql-ssl-cert.pem"
-
-# extraVolumes:
-#   - name: mysql-ssl-cert
-#     secret:
-#       secretName: mysql-ssl-cert
-
-# extraVolumeMounts:
-#   - name: mysql-ssl-cert
-#     mountPath: "/bitnami/wordpress/mysql-ssl-cert.pem"
-#     subPath: mysql-ssl-cert.pem
