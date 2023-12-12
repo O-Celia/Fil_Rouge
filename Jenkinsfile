@@ -3,12 +3,12 @@ pipeline {
     
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             steps {
