@@ -117,14 +117,14 @@ pipeline {
                                 // Check if the pod is ready
                                 if (sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStatus: true) == 0) {
                                     // Delay of 30s for the TLS certificates
-                                    sleep(30)
+                                    sleep(60)
                                     // Perform a test request or additional check to confirm the webhook is operational
                                     webhookReady = true
                                     echo "cert-manager-webhook is ready."
                                 } else {
                                     attempts++
                                     echo "Waiting for cert-manager-webhook to be ready, attempt ${attempts}..."
-                                    sleep(30)
+                                    sleep(60)
                                 }
                             }
                             if (!webhookReady) {
