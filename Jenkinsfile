@@ -102,10 +102,6 @@ pipeline {
                         sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
                         sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
-                        // Ajout du plugin de limitation des tentatives de connexion
-                        sh "kubectl exec -it \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
-                        sh "kubectl exec -it \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
-
                         // Apply autoscaler, redirection of https, password of grafana and certmanager
                         sh "kubectl apply -f autoscaler.yaml"
                         sh "kubectl apply -f redirect.yaml"
@@ -188,10 +184,27 @@ pipeline {
             }
         }
 
+        stage('Add limit login attempt') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
+                    // Ajout du plugin de limitation des tentatives de connexion
+                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
+                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
+
+                }
+            }
+        }
+
         // stage('Run WPScan') {
-        //         when {
-        //             triggeredBy 'TimerTrigger'
-        //         }
+        //     when {
+        //         triggeredBy 'TimerTrigger'
+        //     }
         //     steps {
         //         script {
         //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
@@ -259,7 +272,7 @@ pipeline {
                         //     helm repo add grafana https://grafana.github.io/helm-charts
                         //     helm repo update
                         //     helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
-                        // ''')
+                        // ''')   
                     }
                 }
             }
