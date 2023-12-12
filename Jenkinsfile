@@ -1,9 +1,16 @@
 pipeline {
     agent any
-    
+    triggers {
+        cron('0 8 * * *') // Déclenche à 8h00 chaque jour
+    }
     stages {
 
         stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 // This step deletes the entire workspace
                 deleteDir()
@@ -11,6 +18,11 @@ pipeline {
         }
 
         stage('Cloning the git') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     // Define the repository URL and the target directory
@@ -31,6 +43,11 @@ pipeline {
         }
         
         stage('Set up infrastructure with terraform') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     withCredentials([azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
@@ -52,6 +69,11 @@ pipeline {
         }
 
         stage('Set up Traefik ingress') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     dir('terraform/helm') {
@@ -67,6 +89,11 @@ pipeline {
         }
 
         stage('Set up Wordpress with kubernetes/helm') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     dir('terraform/helm') {
@@ -90,6 +117,11 @@ pipeline {
         }
 
         stage('Update DNS Record') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     sh "az aks get-credentials -g project_celia -n cluster-project"
@@ -106,6 +138,11 @@ pipeline {
         }
 
         stage('Add TLS to Traefik ingress') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL')]) {
@@ -152,6 +189,9 @@ pipeline {
         }
 
         // stage('Run WPScan') {
+        //         when {
+        //             triggeredBy 'TimerTrigger'
+        //         }
         //     steps {
         //         script {
         //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
@@ -167,6 +207,9 @@ pipeline {
         // }
 
         stage('SonarCloud analysis') {
+            when {
+                triggeredBy 'TimerTrigger'
+            }
             steps {
                 withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
                                  string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
@@ -186,6 +229,11 @@ pipeline {
         }
 
         stage('Set up Prometheus, Grafana and Loki with Helm') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
             steps {
                 script {
                     dir('terraform/helm') {
@@ -218,6 +266,11 @@ pipeline {
         }
 
         // stage('Test de charge') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
         //     steps {
         //         script {
         //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
