@@ -186,17 +186,22 @@ pipeline {
                 script {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
+                        // sh('''
+                        //     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                        //     helm repo update
+                        //     helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus-grafana-values.yaml
+                        //     ''')
                         sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                             helm repo update
-                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus-grafana-values.yaml
+                            helm upgrade --install prometheus prometheus-community/prometheus
                             ''')
 
-                        // sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
-                        // ''')
+                        sh('''
+                            helm repo add grafana https://grafana.github.io/helm-charts
+                            helm repo update
+                            helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
+                        ''')
 
                         sh('''
                             helm repo add grafana https://grafana.github.io/helm-charts
