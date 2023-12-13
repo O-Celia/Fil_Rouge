@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wp-cli-install-job
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: install-wp-cli
+        image: alpine:latest
+        command: 
+          - sh
+          - -c
+          - |
+             apk add --no-cache curl php-cli php-phar
+             curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+             chmod +x wp-cli.phar
+             mv wp-cli.phar /var/www/html/wp
+        volumeMounts:
+        - name: wordpress-vol
+          mountPath: /var/www/html
+      restartPolicy: Never
+      volumes:
+      - name: wordpress-vol
+        persistentVolumeClaim:
+          claimName: myblog-wordpress

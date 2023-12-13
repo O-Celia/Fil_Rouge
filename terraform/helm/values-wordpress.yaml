@@ -134,20 +134,7 @@ readinessProbe:
   periodSeconds: 10
 
 ## Extra init containers
-extraInitContainers:
-  - name: install-wp-cli
-    image: alpine:latest  # Utiliser une image légère comme Alpine
-    command: 
-      - sh
-      - -c
-      - |
-        set -e
-         apk add --no-cache curl php8.1-cli php8.1-phar
-         curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-         chmod +x wp-cli.phar
-         mv wp-cli.phar /usr/local/bin/wp
-    securityContext:
-      runAsUser: 0
+extraInitContainers: {}
 
 ## Extra containers for usage as sidecars
 extraContainers:
