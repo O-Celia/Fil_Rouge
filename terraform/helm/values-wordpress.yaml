@@ -146,12 +146,8 @@ extraInitContainers:
          apk add --no-cache curl php-cli php-phar
          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
          chmod +x wp-cli.phar
-         ls -l
          mv wp-cli.phar /wp-cli/wp
-         ls -l /wp-cli
-    volumeMounts:
-      - name: wp-cli-volume
-        mountPath: /wp-cli
+         /usr/local/bin/wp
 
 
 ## Extra containers for usage as sidecars
@@ -275,12 +271,3 @@ mariadb:
 
     ## the storage class name
     className: default
-
-extraVolumes:
-  - name: wp-cli-volume
-    emptyDir: {}
-
-wordpress:
-  extraVolumeMounts:
-    - name: wp-cli-volume
-      mountPath: /wp-cli
