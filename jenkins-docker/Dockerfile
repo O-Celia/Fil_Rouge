@@ -29,9 +29,3 @@ RUN wget -O /tmp/sonarscanner.zip https://binaries.sonarsource.com/Distribution/
     unzip /tmp/sonarscanner.zip -d /opt && \
     rm /tmp/sonarscanner.zip && \
     ln -s /opt/sonar-scanner-4.6.0.2311-linux/bin/sonar-scanner /usr/bin/sonar-scanner
-
-# Install WP-cli apt-get install -y php8.1-cli && \
-RUN apt-get install -y php-cli && \
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
