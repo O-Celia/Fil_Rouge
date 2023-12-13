@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     triggers {
         cron('0 8 * * *') // Déclenche à 8h00 chaque jour
     }
@@ -187,23 +187,6 @@ pipeline {
             }
         }
 
-        stage('Add limit login attempt') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                script {
-                    sh "az aks get-credentials -g project_celia -n cluster-project"
-                    // Ajout du plugin de limitation des tentatives de connexion
-                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
-                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
-
-                }
-            }
-        }
-
         // stage('Run WPScan') {
         //     when {
         //         triggeredBy 'TimerTrigger'
@@ -282,6 +265,23 @@ pipeline {
                         //     helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
                         // ''')   
                     }
+                }
+            }
+        }
+
+        stage('Add limit login attempt') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
+                    // Ajout du plugin de limitation des tentatives de connexion
+                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
+                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
+
                 }
             }
         }
