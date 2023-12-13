@@ -1,8 +1,10 @@
 pipeline {
     agent any
+    
     triggers {
         cron('0 8 * * *') // Déclenche à 8h00 chaque jour
     }
+
     stages {
 
         stage('Clean Workspace') {
@@ -107,7 +109,7 @@ pipeline {
                         sh "kubectl apply -f redirect.yaml"
                         sh "kubectl apply -f grafana-password.yaml"
                         sh "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml"
-                        sh "kubectl apply -f wp-cli-install-job.yaml"
+                        // sh "kubectl apply -f wp-cli-install-job.yaml"
                     }
                 }
             }
@@ -256,6 +258,11 @@ pipeline {
                             helm repo add grafana https://grafana.github.io/helm-charts
                             helm repo update
                             helm upgrade --install loki grafana/loki
+                        ''')
+                        sh('''
+                            helm repo add kiwigrid https://kiwigrid.github.io
+                            helm repo update
+                            helm upgrade --install my-grafana-dashboards kiwigrid/grafana-dashboards -f dashboard-values --version 0.2.0
                         ''')
                         sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
