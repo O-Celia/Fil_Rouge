@@ -134,7 +134,18 @@ readinessProbe:
   periodSeconds: 10
 
 ## Extra init containers
-extraInitContainers: []
+extraInitContainers:
+  - name: install-wp-cli
+    image: alpine:latest  # Utiliser une image légère comme Alpine
+    command: 
+      - sh
+      - -c
+      - |
+         apk add --no-cache curl php7-cli php7-phar  # Installer les dépendances nécessaires
+         curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+         chmod +x wp-cli.phar
+         mv wp-cli.phar /usr/local/bin/wp
+
 
 ## Extra containers for usage as sidecars
 extraContainers:
@@ -216,10 +227,10 @@ storage:
   persistentVolumeClaimName:
 
   ## Alternative set requestedSize to define a size for a dynmaically created PVC
-  requestedSize:
+  requestedSize: 10Gi
 
   ## the storage class name
-  className:
+  className: standard
 
   ## Default access mode (ReadWriteOnce)
   accessModes:
@@ -253,7 +264,7 @@ mariadb:
     persistentVolumeClaimName:
 
     ## Alternative set requestedSize to define a size for a dynmaically created PVC
-    requestedSize:
+    requestedSize: 5Gi
 
     ## the storage class name
-    className:
+    className: standard
