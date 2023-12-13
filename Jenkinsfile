@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             when {
@@ -245,7 +245,7 @@ pipeline {
                         sh('''
                             helm repo add kiwigrid https://kiwigrid.github.io
                             helm repo update
-                            helm upgrade --install my-grafana-dashboards kiwigrid/grafana-dashboards -f dashboard-values --version 0.2.0
+                            helm upgrade --install my-grafana-dashboards kiwigrid/grafana-dashboards -f dashboard-values.yml --version 0.2.0
                         ''')
                         sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
