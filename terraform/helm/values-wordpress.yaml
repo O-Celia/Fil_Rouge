@@ -146,7 +146,12 @@ extraInitContainers:
          apk add --no-cache curl php-cli php-phar
          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
          chmod +x wp-cli.phar
+         ls -l
          mv wp-cli.phar /wp-cli/wp
+         ls -l /wp-cli
+    volumeMounts:
+      - name: wp-cli-volume
+        mountPath: /wp-cli
 
 
 ## Extra containers for usage as sidecars
