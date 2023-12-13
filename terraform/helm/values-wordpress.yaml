@@ -230,7 +230,7 @@ storage:
   requestedSize: 10Gi
 
   ## the storage class name
-  className: standard
+  className: default
 
   ## Default access mode (ReadWriteOnce)
   accessModes:
@@ -267,4 +267,4 @@ mariadb:
     requestedSize: 5Gi
 
     ## the storage class name
-    className: standard
+    className: default
