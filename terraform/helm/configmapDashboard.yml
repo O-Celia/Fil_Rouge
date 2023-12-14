@@ -9,7 +9,7 @@ data:
     {
       "__inputs": [
         {
-          "name": "Prometheus",
+          "name": "prometheus",
           "label": "Prometheus",
           "description": "",
           "type": "datasource",
@@ -99,7 +99,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -191,7 +191,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#5794F2"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -281,7 +281,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -372,7 +372,7 @@ data:
             "#FADE2A",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -459,7 +459,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -546,7 +546,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -633,7 +633,7 @@ data:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "description": "",
           "fieldConfig": {
             "defaults": {},
@@ -720,7 +720,7 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -816,7 +816,7 @@ data:
           "cacheTimeout": null,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -911,7 +911,7 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1017,7 +1017,7 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1214,7 +1214,7 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1308,7 +1308,7 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${prometheus}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1407,7 +1407,7 @@ data:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${Prometheus}",
+            "datasource": "${prometheus}",
             "definition": "label_values(host)",
             "description": null,
             "error": null,
