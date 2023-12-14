@@ -90,13 +90,13 @@ ingress:
         - myblog.cecicelia.site
 
 ## Resource limits and requests
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    cpu: 200m
+    memory: 500Mi
+  requests:
+    cpu: 200m
+    memory: 500Mi
 
 ## Custom startup probe (overwrites default startup probe)
 customStartupProbe: {}
