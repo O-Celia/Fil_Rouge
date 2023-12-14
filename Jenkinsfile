@@ -5,19 +5,19 @@ pipeline {
         cron('0 8 * * *') // Déclenche à 8h00 chaque jour
     }
 
-    stages {
+    // stages {
 
-        stage('Clean Workspace') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+    //     stage('Clean Workspace') {
+    //         when {
+    //             not {
+    //                 triggeredBy 'TimerTrigger'
+    //             }
+    //         }
+    //         steps {
+    //             // This step deletes the entire workspace
+    //             deleteDir()
+    //         }
+    //     }
 
         stage('Cloning the git') {
             when {
