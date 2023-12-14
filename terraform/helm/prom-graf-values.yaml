@@ -6,7 +6,13 @@ prometheus:
     ##
     resources:
       requests:
-        memory: 500Mi
+        memory: 1000Mi
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+    requests:
+      memory: 1000Mi
 
 grafana:
   enabled: true
@@ -31,9 +37,9 @@ grafana:
 prometheusOperator:
   resources:
     limits:
-      cpu: 200m
-      memory: 500Mi
+      cpu: 500m
+      memory: 1000Mi
     requests:
-      cpu: 200m
-      memory: 500Mi
+      cpu: 500m
+      memory: 1000Mi
 
