@@ -11,13 +11,13 @@ grafana:
       url: http://loki:3100  # Replace with your Loki service URL
       access: proxy
       isDefault: false
-    - name: MariaDB
-      type: mysql
-      url: jdbc:mariadb://myblog-mariadb.default.svc.cluster.local:3306/myblog-mariadb
-      access: proxy
-      isDefault: false
-      database: mariadb-celia
-      user: wordpress
-      secureJsonData:
-        password: password
+    # - name: MariaDB
+    #   type: mysql
+    #   url: jdbc:mariadb://myblog-mariadb.default.svc.cluster.local:3306/myblog-mariadb
+    #   access: proxy
+    #   isDefault: false
+    #   database: mariadb-celia
+    #   user: wordpress
+    #   secureJsonData:
+    #     password: password
   adminPassword: admin
