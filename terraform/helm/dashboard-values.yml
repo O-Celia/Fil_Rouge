@@ -9,7 +9,7 @@ importFromValue:
     {
       "__inputs": [
         {
-          "name": "Prometheus",
+          "name": "DS_PROMETHEUS",
           "label": "Prometheus",
           "description": "",
           "type": "datasource",
@@ -99,7 +99,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -191,7 +191,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#5794F2"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -281,7 +281,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -372,7 +372,7 @@ importFromValue:
             "#FADE2A",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -459,7 +459,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -546,7 +546,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -633,7 +633,7 @@ importFromValue:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "description": "",
           "fieldConfig": {
             "defaults": {},
@@ -720,7 +720,7 @@ importFromValue:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -816,7 +816,7 @@ importFromValue:
           "cacheTimeout": null,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -911,7 +911,7 @@ importFromValue:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1017,7 +1017,7 @@ importFromValue:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1214,7 +1214,7 @@ importFromValue:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1308,7 +1308,7 @@ importFromValue:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${Prometheus}",
+          "datasource": "${DS_PROMETHEUS}",
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -1407,7 +1407,7 @@ importFromValue:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${Prometheus}",
+            "datasource": "${DS_PROMETHEUS}",
             "definition": "label_values(host)",
             "description": null,
             "error": null,

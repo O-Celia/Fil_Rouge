@@ -109,7 +109,7 @@ pipeline {
                         sh "kubectl apply -f redirect.yaml"
                         sh "kubectl apply -f grafana-password.yaml"
                         sh "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml"
-                        sh "kubectl apply -f configmapDashboard2.yml"
+                        sh "kubectl apply -f configmapDashboard3.yml"
                         // sh "kubectl apply -f wp-cli-install-job.yaml"
                     }
                 }
