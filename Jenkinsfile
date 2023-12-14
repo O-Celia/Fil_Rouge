@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        // stage('Clean Workspace') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             when {
@@ -236,18 +236,14 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'mailPassword', variable: 'PWD_EMAIL')]) {
-                        dir('terraform/helm') {
-                            sh "az aks get-credentials -g project_celia -n cluster-project"
-                            // Update certmanager.yaml with the actual email
-                            sh "sed -i 'adminPassword: pwd/adminPassword: ${PWD_EMAIL}/' prom-graf-values.yaml"
-                            sh('''
-                                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                                helm repo update
-                                helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
-                            ''') 
-                        }
-                    }
+                    dir('terraform/helm') {
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
+                        sh('''
+                            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                            helm repo update
+                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
+                        ''') 
+                    }  
                 }
             }
         }
