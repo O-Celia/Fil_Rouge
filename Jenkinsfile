@@ -5,7 +5,7 @@ pipeline {
         cron('0 8 * * *') // Déclenche à 8h00 chaque jour
     }
 
-    // stages {
+    stages {
 
     //     stage('Clean Workspace') {
     //         when {
