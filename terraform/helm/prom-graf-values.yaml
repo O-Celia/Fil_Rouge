@@ -18,8 +18,8 @@ prometheus:
 alertmanager:
   alertmanagerSpec:
     resources:
-    requests:
-      memory: 200Mi
+      requests:
+        memory: 200Mi
     storage: {}
     volumeClaimTemplate:
       spec:
@@ -33,11 +33,6 @@ grafana:
   enabled: true
   # Configures Grafana to use Loki as a datasource
   additionalDataSources:
-    - name: Loki
-      type: loki
-      url: http://loki:3100  # Replace with your Loki service URL
-      access: proxy
-      isDefault: false
     - name: MariaDB
       type: mysql
       url: myblog-mariadb.default.svc.cluster.local:3306
