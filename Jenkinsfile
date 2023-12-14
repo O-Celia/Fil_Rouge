@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             when {
@@ -268,7 +268,7 @@ pipeline {
                         sh('''
                             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                             helm repo update
-                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml -f dashboard-values.yml
+                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml -f wordpress-dashboard-values.yml
                         ''')
                         
                         // sh('''
@@ -287,22 +287,22 @@ pipeline {
             }
         }
 
-        stage('Add limit login attempt') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                script {
-                    sh "az aks get-credentials -g project_celia -n cluster-project"
-                    // Ajout du plugin de limitation des tentatives de connexion
-                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
-                    sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
+        // stage('Add limit login attempt') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             sh "az aks get-credentials -g project_celia -n cluster-project"
+        //             // Ajout du plugin de limitation des tentatives de connexion
+        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
+        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         // stage('Test de charge') {
         //     when {
