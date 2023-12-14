@@ -20,14 +20,6 @@ alertmanager:
     resources:
       requests:
         memory: 200Mi
-    storage: {}
-    volumeClaimTemplate:
-      spec:
-        storageClassName: alertstorage
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 10Gi
 
 grafana:
   enabled: true
