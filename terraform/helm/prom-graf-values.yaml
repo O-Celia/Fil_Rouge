@@ -3,16 +3,31 @@ prometheus:
   # Other Prometheus configurations...
   prometheusSpec:
     ## Resource limits & requests
-    ##
     resources:
       requests:
-        memory: 400Mi
+        memory: 200Mi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: promstorage
 
 alertmanager:
   alertmanagerSpec:
     resources:
     requests:
-      memory: 400Mi
+      memory: 200Mi
+    storage: {}
+    volumeClaimTemplate:
+      spec:
+        storageClassName: alertstorage
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
 
 grafana:
   enabled: true
@@ -23,23 +38,29 @@ grafana:
       url: http://loki:3100  # Replace with your Loki service URL
       access: proxy
       isDefault: false
-    # - name: MariaDB
-    #   type: mysql
-    #   url: jdbc:mariadb://myblog-mariadb.default.svc.cluster.local:3306/myblog-mariadb rediscluster.default.svc.cluster.local:3306
-    #   access: proxy
-    #   isDefault: false
-    #   database: mariadb-celia
-    #   user: wordpress
-    #   secureJsonData:
-    #     password: password
-  adminPassword: admin
+    - name: MariaDB
+      type: mysql
+      url: myblog-mariadb.default.svc.cluster.local:3306
+      access: proxy
+      isDefault: false
+      database: mariadb-celia
+      user: wordpress
+      secureJsonData:
+        password: password
+  adminPassword: pwd
+  persistence:
+    enabled: true
+    storageClassName: grafstorage
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
 
 prometheusOperator:
   resources:
     limits:
-      cpu: 200m
-      memory: 400Mi
+      cpu: 100m
+      memory: 200Mi
     requests:
-      cpu: 200m
-      memory: 400Mi
+      cpu: 100m
+      memory: 200Mi
 

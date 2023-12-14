@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-    //     stage('Clean Workspace') {
-    //         when {
-    //             not {
-    //                 triggeredBy 'TimerTrigger'
-    //             }
-    //         }
-    //         steps {
-    //             // This step deletes the entire workspace
-    //             deleteDir()
-    //         }
-    //     }
+        stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             when {
@@ -100,7 +100,6 @@ pipeline {
                 script {
                     dir('terraform/helm') {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
-                        // sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
                         sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
                         sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
@@ -110,7 +109,8 @@ pipeline {
                         sh "kubectl apply -f grafana-password.yaml"
                         sh "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml"
                         sh "kubectl apply -f configmapDashboard2.yml"
-                        // sh "kubectl apply -f wp-cli-install-job.yaml"
+                        sh "kubectl apply -f configmapDashboardMine.yml"
+                        sh "kubectl apply -f configmapAlerts.yml"
                     }
                 }
             }
@@ -188,23 +188,23 @@ pipeline {
             }
         }
 
-        // stage('Run WPScan') {
-        //     when {
-        //         triggeredBy 'TimerTrigger'
-        //     }
-        //     steps {
-        //         script {
-        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-        //                              string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
-        //                 // Set environment variables for the credentials
-        //                 sh "az aks get-credentials -g project_celia -n cluster-project"
-        //                 // sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
-        //                 // Upload the file to Azure Storage Container
-        //                 sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Run WPScan') {
+            when {
+                triggeredBy 'TimerTrigger'
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+                        // Set environment variables for the credentials
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
+                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+                        // Upload the file to Azure Storage Container
+                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+                    }
+                }
+            }
+        }
 
         stage('SonarCloud analysis') {
             when {
@@ -228,24 +228,7 @@ pipeline {
             }
         }
 
-        // stage('Add limit login attempt') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             sh "az aks get-credentials -g project_celia -n cluster-project"
-        //             // Ajout du plugin de limitation des tentatives de connexion
-        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
-        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
-
-        //         }
-        //     }
-        // }
-
-        stage('Set up Prometheus, Grafana and Loki with Helm') {
+        stage('Set up Prometheus, Grafana with Helm') {
             when {
                 not {
                     triggeredBy 'TimerTrigger'
@@ -253,56 +236,21 @@ pipeline {
             }
             steps {
                 script {
-                    dir('terraform/helm') {
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh('''
-                            helm repo add grafana https://grafana.github.io/helm-charts
-                            helm repo update
-                            helm upgrade --install loki grafana/loki
-                        ''')
-                        // sh('''
-                        //     helm repo add kiwigrid https://kiwigrid.github.io
-                        //     helm repo update
-                        //     helm upgrade --install my-grafana-dashboards kiwigrid/grafana-dashboards -f dashboard-values.yml --version 0.2.0
-                        // ''')
-                        sh('''
-                            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                            helm repo update
-                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
-                        ''')
-                        
-                        // sh('''
-                        //     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade --install prometheus prometheus-community/prometheus
-                        //     ''')
-
-                        // sh('''
-                        //     helm repo add grafana https://grafana.github.io/helm-charts
-                        //     helm repo update
-                        //     helm upgrade --install grafana grafana/grafana -f grafana-values.yaml
-                        // ''')   
+                    withCredentials([string(credentialsId: 'mailPassword', variable: 'PWD_EMAIL')]) {
+                        dir('terraform/helm') {
+                            sh "az aks get-credentials -g project_celia -n cluster-project"
+                            // Update certmanager.yaml with the actual email
+                            sh "sed -i 'adminPassword: pwd/adminPassword: ${PWD_EMAIL}/' prom-graf-values.yaml"
+                            sh('''
+                                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                                helm repo update
+                                helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
+                            ''') 
+                        }
                     }
                 }
             }
         }
-
-        // stage('Add limit login attempt') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             sh "az aks get-credentials -g project_celia -n cluster-project"
-        //             // Ajout du plugin de limitation des tentatives de connexion
-        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp plugin install limit-login-attempts-reloaded --activate"
-        //             sh "kubectl exec -i \$(kubectl get pods --selector=app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -- wp option update limit_login_attempts_options '{\"max_retries\":\"5\",\"lockout_duration\":\"1800\"}'"
-
-        //         }
-        //     }
-        // }
 
         // stage('Test de charge') {
         //     when {

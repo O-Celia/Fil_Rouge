@@ -1,0 +1,331 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alert
+  labels:
+    grafana_alert: "1"
+data:
+  k8s-alert.json: |-
+    {
+        "apiVersion": 1,
+        "groups": [
+            {
+                "orgId": 1,
+                "name": "WordpressGroupAlert",
+                "folder": "WordpressAlerts",
+                "interval": "5m",
+                "rules": [
+                    {
+                        "uid": "bc3f5b5b-5518-4ff8-a639-2e27fc3bbe6f",
+                        "title": "CPU Usage > 85%",
+                        "condition": "E",
+                        "data": [
+                            {
+                                "refId": "A",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "prometheus",
+                                "model": {
+                                    "datasource": {
+                                        "type": "prometheus",
+                                        "uid": "prometheus"
+                                    },
+                                    "disableTextWrap": false,
+                                    "editorMode": "builder",
+                                    "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"wordpress\"}[5m]))",
+                                    "fullMetaSearch": false,
+                                    "includeNullMetadata": true,
+                                    "instant": false,
+                                    "interval": "",
+                                    "intervalMs": 30000,
+                                    "legendFormat": "__auto",
+                                    "maxDataPoints": 43200,
+                                    "range": true,
+                                    "refId": "A",
+                                    "useBackend": false
+                                }
+                            },
+                            {
+                                "refId": "B",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "prometheus",
+                                "model": {
+                                    "datasource": {
+                                        "type": "prometheus",
+                                        "uid": "prometheus"
+                                    },
+                                    "disableTextWrap": false,
+                                    "editorMode": "builder",
+                                    "expr": "sum(kube_pod_container_resource_limits{container=\"wordpress\", resource=\"cpu\"})",
+                                    "fullMetaSearch": false,
+                                    "includeNullMetadata": true,
+                                    "instant": false,
+                                    "interval": "",
+                                    "intervalMs": 30000,
+                                    "legendFormat": "__auto",
+                                    "maxDataPoints": 43200,
+                                    "range": true,
+                                    "refId": "B",
+                                    "useBackend": false
+                                }
+                            },
+                            {
+                                "refId": "C",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "$A/$B*100",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "refId": "C",
+                                    "type": "math",
+                                    "window": ""
+                                }
+                            },
+                            {
+                                "refId": "D",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "C",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "reducer": "last",
+                                    "refId": "D",
+                                    "type": "reduce",
+                                    "window": ""
+                                }
+                            },
+                            {
+                                "refId": "E",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "conditions": [
+                                        {
+                                            "evaluator": {
+                                                "params": [
+                                                    85,
+                                                    0
+                                                ],
+                                                "type": "gt"
+                                            },
+                                            "query": {
+                                                "params": []
+                                            },
+                                            "reducer": {
+                                                "params": [],
+                                                "type": "last"
+                                            },
+                                            "type": "query"
+                                        }
+                                    ],
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "D",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "refId": "E",
+                                    "type": "threshold",
+                                    "window": ""
+                                }
+                            }
+                        ],
+                        "dasboardUid": "bf1b92cc-2d1d-4e3a-8c9c-627ba17573c9",
+                        "panelId": 4,
+                        "noDataState": "NoData",
+                        "execErrState": "Error",
+                        "for": "5m",
+                        "annotations": {
+                            "__dashboardUid__": "bf1b92cc-2d1d-4e3a-8c9c-627ba17573c9",
+                            "__panelId__": "4"
+                        },
+                        "labels": {},
+                        "isPaused": false
+                    },
+                    {
+                        "uid": "a938d3d8-7c5e-47fc-97e5-376306d0d3fc",
+                        "title": "Memory Usage > 85%",
+                        "condition": "E",
+                        "data": [
+                            {
+                                "refId": "A",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "prometheus",
+                                "model": {
+                                    "datasource": {
+                                        "type": "prometheus",
+                                        "uid": "prometheus"
+                                    },
+                                    "disableTextWrap": false,
+                                    "editorMode": "builder",
+                                    "expr": "sum(container_memory_working_set_bytes{container=\"wordpress\"})",
+                                    "fullMetaSearch": false,
+                                    "includeNullMetadata": true,
+                                    "instant": false,
+                                    "interval": "",
+                                    "intervalMs": 30000,
+                                    "legendFormat": "__auto",
+                                    "maxDataPoints": 43200,
+                                    "range": true,
+                                    "refId": "A",
+                                    "useBackend": false
+                                }
+                            },
+                            {
+                                "refId": "B",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "prometheus",
+                                "model": {
+                                    "datasource": {
+                                        "type": "prometheus",
+                                        "uid": "prometheus"
+                                    },
+                                    "disableTextWrap": false,
+                                    "editorMode": "builder",
+                                    "expr": "sum(kube_pod_container_resource_limits{container=\"wordpress\"})",
+                                    "fullMetaSearch": false,
+                                    "includeNullMetadata": true,
+                                    "instant": false,
+                                    "interval": "",
+                                    "intervalMs": 30000,
+                                    "legendFormat": "__auto",
+                                    "maxDataPoints": 43200,
+                                    "range": true,
+                                    "refId": "B",
+                                    "useBackend": false
+                                }
+                            },
+                            {
+                                "refId": "C",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "$A/$B*100",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "refId": "C",
+                                    "type": "math",
+                                    "window": ""
+                                }
+                            },
+                            {
+                                "refId": "D",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "C",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "reducer": "last",
+                                    "refId": "D",
+                                    "type": "reduce",
+                                    "window": ""
+                                }
+                            },
+                            {
+                                "refId": "E",
+                                "relativeTimeRange": {
+                                    "from": 1800,
+                                    "to": 0
+                                },
+                                "datasourceUid": "__expr__",
+                                "model": {
+                                    "conditions": [
+                                        {
+                                            "evaluator": {
+                                                "params": [
+                                                    85,
+                                                    0
+                                                ],
+                                                "type": "gt"
+                                            },
+                                            "query": {
+                                                "params": []
+                                            },
+                                            "reducer": {
+                                                "params": [],
+                                                "type": "last"
+                                            },
+                                            "type": "query"
+                                        }
+                                    ],
+                                    "datasource": {
+                                        "name": "Expression",
+                                        "type": "__expr__",
+                                        "uid": "__expr__"
+                                    },
+                                    "expression": "D",
+                                    "intervalMs": 1000,
+                                    "maxDataPoints": 43200,
+                                    "refId": "E",
+                                    "type": "threshold",
+                                    "window": ""
+                                }
+                            }
+                        ],
+                        "dasboardUid": "bf1b92cc-2d1d-4e3a-8c9c-627ba17573c9",
+                        "panelId": 3,
+                        "noDataState": "NoData",
+                        "execErrState": "Error",
+                        "for": "5m",
+                        "annotations": {
+                            "__dashboardUid__": "bf1b92cc-2d1d-4e3a-8c9c-627ba17573c9",
+                            "__panelId__": "3"
+                        },
+                        "labels": {},
+                        "isPaused": false
+                    }
+                ]
+            }
+        ]
+    }
