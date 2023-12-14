@@ -1,6 +1,12 @@
 prometheus:
   enabled: true
   # Other Prometheus configurations...
+  prometheusSpec:
+    ## Resource limits & requests
+    ##
+    resources:
+      requests:
+        memory: 500Mi
 
 grafana:
   enabled: true
@@ -21,3 +27,13 @@ grafana:
     #   secureJsonData:
     #     password: password
   adminPassword: admin
+
+prometheusOperator:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 200m
+      memory: 500Mi
+
