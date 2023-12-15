@@ -246,7 +246,7 @@ pipeline {
                             sh('''
                                 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                                 helm repo update
-                                sh "sed -i 's/adminPassword: mypassword/adminPassword: ${GRAFANA_PWD}/' prom-graf-values.yaml"
+                                sed -i 's/adminPassword: mypassword/adminPassword: ${GRAFANA_PWD}/' prom-graf-values.yaml
                                 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
                             ''') 
                         }  
