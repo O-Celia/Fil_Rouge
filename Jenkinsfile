@@ -203,12 +203,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'passwordGrafana', variable: 'GRAFANA_PWD')]) {
                         dir('terraform/helm') {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
+                            sh"sed -i 's/adminPassword: mypassword/adminPassword: ${GRAFANA_PWD}/' prom-graf-values.yaml"
                             sh('''
                                 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                                 helm repo update
-                                sed -i 's/adminPassword: mypassword/adminPassword: ${GRAFANA_PWD}/' prom-graf-values.yaml
                                 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
-                            ''') 
+                            ''')
                         }  
                     }
                 }
