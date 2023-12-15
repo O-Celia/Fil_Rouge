@@ -61,8 +61,8 @@ pipeline {
                             sh 'terraform apply -auto-approve'
                             // Retrieve Terraform outputs
                             env.STORAGE_ACCOUNT = sh(script: "terraform output -raw storage_account_name", returnStdout: true).trim()
-                            env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
                             env.STORAGE_KEY = sh(script: "terraform output -raw storage_account_key", returnStdout: true).trim()
+                            env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
 
                         }
                     }

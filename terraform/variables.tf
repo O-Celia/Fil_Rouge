@@ -23,11 +23,6 @@ variable "app_insights_name" {
   default = "wordpress-insights"
 }
 
-variable "application_type" {
-  type    = string
-  default = "web"
-}
-
 variable "storage" {
   type    = string
   default = "celiascanresults"
