@@ -2,22 +2,22 @@ pipeline {
     agent any
 
     triggers {
-        cron('30 9 * * *') // Déclenche à 8h00 chaque jour
+        cron('50 9 * * *') // Déclenche à 8h00 chaque jour
     }
 
     stages {
 
-        // stage('Clean Workspace') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             when {
@@ -192,46 +192,6 @@ pipeline {
             }
         }
 
-        stage('Run WPScan') {
-            when {
-                triggeredBy 'TimerTrigger'
-            }
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
-                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
-                        // Set environment variables for the credentials
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
-                        // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
-                    }
-                }
-            }
-        }
-
-        stage('SonarCloud analysis') {
-            when {
-                triggeredBy 'TimerTrigger'
-            }
-            steps {
-                withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
-                                 string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
-                                 string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
-                    script {
-                        withSonarQubeEnv('sonarcloud') {
-                            sh '/usr/bin/sonar-scanner \
-                                -Dsonar.projectKey=$SONAR_PROJECT \
-                                -Dsonar.organization=$SONAR_ORGANIZATION_KEY \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=https://sonarcloud.io \
-                                -Dsonar.login=$SONAR_TOKEN'
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Set up Prometheus, Grafana with Helm') {
             when {
                 not {
@@ -255,20 +215,66 @@ pipeline {
             }
         }
 
-        // stage('Test de charge') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
-        //                 sh('''seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF $WORDPRESS_DNS"
-        //                 ''')
-        //             }
-        //         }
-        //     }
-        // }
+        stage('SonarCloud analysis') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONAR_TOKEN'),
+                                 string(credentialsId: 'sonarGithub', variable: 'SONAR_ORGANIZATION_KEY'),
+                                 string(credentialsId: 'projectKey', variable: 'SONAR_PROJECT')]) {
+                    script {
+                        withSonarQubeEnv('sonarcloud') {
+                            sh '/usr/bin/sonar-scanner \
+                                -Dsonar.projectKey=$SONAR_PROJECT \
+                                -Dsonar.organization=$SONAR_ORGANIZATION_KEY \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=https://sonarcloud.io \
+                                -Dsonar.login=$SONAR_TOKEN'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Test de charge') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
+                        sh('''seq 250 | parallel --max-args 0 "curl -k $WORDPRESS_DNS"
+                        ''')
+                    }
+                }
+            }
+        }
+
+        stage('Run WPScan') {
+            when {
+                anyOf {
+                    triggeredBy 'TimerTrigger'
+                    triggeredBy 'SCMTrigger'
+                    triggeredBy 'ManualTrigger'
+                }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS'),
+                                     string(credentialsId: 'wpsScanToken', variable: 'WPS_TOKEN')]) {
+                        // Set environment variables for the credentials
+                        sh "az aks get-credentials -g project_celia -n cluster-project"
+                        sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
+                        // Upload the file to Azure Storage Container
+                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+                    }
+                }
+            }
+        }
     }
 }
