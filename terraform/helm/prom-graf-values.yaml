@@ -36,12 +36,12 @@ grafana:
   #     secureJsonData:
   #       password: password
   adminPassword: mypassword
-  # persistence:
-  #   enabled: true
-  #   storageClassName: grafstorage
-  #   accessModes:
-  #     - ReadWriteOnce
-  #   size: 10Gi
+  persistence:
+    enabled: true
+    storageClassName: grafstorage
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
 
 prometheusOperator:
   resources:
