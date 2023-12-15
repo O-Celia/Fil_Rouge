@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        cron('50 9 * * *') // Déclenche à 8h00 chaque jour
+        cron('0 8 * * *') // Déclenche à 8h00 chaque jour
     }
 
     stages {
@@ -260,7 +260,7 @@ pipeline {
                 anyOf {
                     triggeredBy 'TimerTrigger'
                     // triggeredBy 'SCMTrigger'
-                    triggeredBy 'ManualTrigger'
+                    triggeredBy 'UserIdCause'
                 }
             }
             steps {

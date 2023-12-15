@@ -13,7 +13,7 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
-          storageClassName: promstorage
+          storageClassName: default
 
 alertmanager:
   alertmanagerSpec:
@@ -38,10 +38,15 @@ grafana:
   adminPassword: mypassword
   persistence:
     enabled: true
-    storageClassName: grafstorage
+    type: pvc
+    storageClassName: default
     accessModes:
-      - ReadWriteOnce
+    - ReadWriteOnce
     size: 10Gi
+  deploymentStrategy:
+    type: Recreate
+    finalizers:
+    - kubernetes.io/pvc-protection  
 
 prometheusOperator:
   resources:
