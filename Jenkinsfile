@@ -98,19 +98,23 @@ pipeline {
             }
             steps {
                 script {
-                    dir('terraform/helm') {
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
-                        sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
+                    withCredentials([string(credentialsId: 'passwordMariadb', variable: 'MARIADB_PWD'),
+                                     string(credentialsId: 'usernameMariadb', variable: 'MARIADB_USR')]) {
+                        dir('terraform/helm') {
+                            sh "az aks get-credentials -g project_celia -n cluster-project"
+                            sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
+                            // Update values-wordpress.yaml with the actual email
+                            sh "sed -i 's/password: mypassword/password: ${MARIADB_PWD}/' values-wordpress.yaml"
+                            sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
+                            sh "sed -i 's/user: myusername/user: ${MARIADB_USR}/' values-wordpress.yaml"
+                            sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
 
-                        // Apply autoscaler, redirection of https, password of grafana and certmanager
-                        sh "kubectl apply -f autoscaler.yaml"
-                        sh "kubectl apply -f redirect.yaml"
-                        sh "kubectl apply -f grafana-password.yaml"
-                        sh "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml"
-                        // sh "kubectl apply -f configmapDashboard2.yml"
-                        sh "kubectl apply -f configmapDashboardMine.yml"
-                        sh "kubectl apply -f configmapAlerts.yml"
+                            // Apply autoscaler, redirection of https, password of grafana and certmanager
+                            sh "kubectl apply -f autoscaler.yaml"
+                            sh "kubectl apply -f redirect.yaml"
+                            sh "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml"
+                            sh "kubectl apply -f configmapDashboardMine.yml"
+                        }
                     }
                 }
             }
@@ -236,14 +240,17 @@ pipeline {
             }
             steps {
                 script {
-                    dir('terraform/helm') {
-                        sh "az aks get-credentials -g project_celia -n cluster-project"
-                        sh('''
-                            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                            helm repo update
-                            helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
-                        ''') 
-                    }  
+                    withCredentials([string(credentialsId: 'passwordGrafana', variable: 'GRAFANA_PWD')]) {
+                        dir('terraform/helm') {
+                            sh "az aks get-credentials -g project_celia -n cluster-project"
+                            sh('''
+                                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                                helm repo update
+                                sh "sed -i 's/adminPassword: mypassword/password: ${GRAFANA_PWD}/' prom-graf-values.yaml"
+                                helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prom-graf-values.yaml
+                            ''') 
+                        }  
+                    }
                 }
             }
         }

@@ -136,18 +136,6 @@ readinessProbe:
 
 ## Extra init containers
 extraInitContainers: {}
-  # - name: install-wp-cli
-  #   image: alpine:latest
-  #   command: 
-  #     - sh
-  #     - -c
-  #     - |
-  #        set -e
-  #        apk add --no-cache curl php-cli php-phar
-  #        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  #        chmod +x wp-cli.phar
-  #        mv wp-cli.phar /var/www/html/wp
-
 
 ## Extra containers for usage as sidecars
 extraContainers:
@@ -249,16 +237,16 @@ mariadb:
   ## Database configuration
   settings:
     ## The root user password
-    rootPassword: password
+    rootPassword: rootpassword
 
   ## Optional user database which is created during first startup with user and password
   userDatabase:
     ## Name of the user database
     name: mariadb-celia
     ## Database user with full access rights
-    user: wordpress
+    user: myusername
     ## Password of the database user
-    password: password
+    password: mypassword
 
   # Storage parameters
   storage:
