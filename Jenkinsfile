@@ -239,23 +239,7 @@ pipeline {
             }
         }
 
-        stage('Test de charge') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
-                        sh('''seq 250 | parallel --max-args 0 "curl -k $WORDPRESS_DNS"
-                        ''')
-                    }
-                }
-            }
-        }
-
-        stage('Run WPScan') {
+stage('Run WPScan') {
             when {
                 anyOf {
                     triggeredBy 'TimerTrigger'
@@ -272,6 +256,22 @@ pipeline {
                         sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
                         // Upload the file to Azure Storage Container
                         sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+                    }
+                }
+            }
+        }
+
+        stage('Test de charge') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'wordpressBlog', variable: 'WORDPRESS_DNS')]) {
+                        sh('''seq 250 | parallel --max-args 0 "curl -k $WORDPRESS_DNS"
+                        ''')
                     }
                 }
             }
