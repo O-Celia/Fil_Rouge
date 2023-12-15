@@ -6,14 +6,14 @@ prometheus:
     resources:
       requests:
         memory: 200Mi
-    # storageSpec:
-    #   volumeClaimTemplate:
-    #     spec:
-    #       accessModes: ["ReadWriteOnce"]
-    #       resources:
-    #         requests:
-    #           storage: 10Gi
-    #       storageClassName: promstorage
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: promstorage
 
 alertmanager:
   alertmanagerSpec:
