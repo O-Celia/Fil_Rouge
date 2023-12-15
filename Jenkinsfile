@@ -259,7 +259,7 @@ pipeline {
             when {
                 anyOf {
                     triggeredBy 'TimerTrigger'
-                    triggeredBy 'SCMTrigger'
+                    // triggeredBy 'SCMTrigger'
                     triggeredBy 'ManualTrigger'
                 }
             }
