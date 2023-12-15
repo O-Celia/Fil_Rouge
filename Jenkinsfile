@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        cron('0 8 * * *') // Déclenche à 8h00 chaque jour
+        cron('30 9 * * *') // Déclenche à 8h00 chaque jour
     }
 
     stages {
