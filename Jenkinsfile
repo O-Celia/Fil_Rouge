@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            when {
-                not {
-                    triggeredBy 'TimerTrigger'
-                }
-            }
-            steps {
-                // This step deletes the entire workspace
-                deleteDir()
-            }
-        }
+        // stage('Clean Workspace') {
+        //     when {
+        //         not {
+        //             triggeredBy 'TimerTrigger'
+        //         }
+        //     }
+        //     steps {
+        //         // This step deletes the entire workspace
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Cloning the git') {
             when {
@@ -63,7 +63,6 @@ pipeline {
                             env.STORAGE_ACCOUNT = sh(script: "terraform output -raw storage_account_name", returnStdout: true).trim()
                             env.STORAGE_KEY = sh(script: "terraform output -raw storage_account_key", returnStdout: true).trim()
                             env.CONTAINER_NAME = sh(script: "terraform output -raw container_name", returnStdout: true).trim()
-
                         }
                     }
                 }
