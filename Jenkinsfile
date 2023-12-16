@@ -184,7 +184,7 @@ pipeline {
                             //     helm repo add traefik https://traefik.github.io/charts
                             //     helm repo update
                             //     helm upgrade traefik traefik/traefik -f traefik-values.yaml --version 25.0.0
-                            ''')
+                            // ''')
                         }
                     }
                 }
