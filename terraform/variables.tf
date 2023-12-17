@@ -3,14 +3,9 @@ variable "resource_group_name" {
   default = "project_celia"
 }
 
-# variable "location" {
-#   type    = string
-#   default = "westeurope"
-# }
-
 variable "location" {
   type    = string
-  default = "francecentral"
+  default = "westeurope"
 }
 
 variable "aks_cluster_name" {
