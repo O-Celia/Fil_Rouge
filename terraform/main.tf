@@ -31,7 +31,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 resource "azurerm_log_analytics_workspace" "wordpress_monitor" {
   name                = var.monitor_name
   location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.resource_group_name
+  resource_group_name = azurerm_resource_group.aks.name
 }
 
 
