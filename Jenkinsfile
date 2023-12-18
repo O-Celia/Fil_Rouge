@@ -53,8 +53,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([azureServicePrincipal(credentialsId: 'ServicePrincipal')]) {
-                        // sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
-                        sh "az login --user coudraogo.ext@simplonformations.onmicrosoft.com --password Nabangba95"
+                        sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
 
                         // Initialize Terraform
                         dir('terraform') {
