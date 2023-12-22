@@ -57,5 +57,5 @@ resources:
 
 ## Internal container port (#default: 8000#)
 containerPort:
-  http: 8080
+  http: 8000
   https: 8443
