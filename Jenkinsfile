@@ -112,7 +112,7 @@ pipeline {
                             sh "sed -i 's/wordpressPassword: mypassword/wordpressPassword: ${MARIADB_PWD}/' values.yaml"
                             sh "sed -i 's/wordpressUsername: username/wordpressUsername: ${MARIADB_USR}/' values.yaml"
                             sh "sed -i 's/wordpressEmail: email/wordpressEmail: ${CERTBOT_EMAIL}/' values.yaml"
-                            sh "sed -i 's/auth.rootPassword: rootpassword/auth.rootPassword: : ${MARIADB_PWD}/' values.yaml"
+                            sh "sed -i 's/auth.rootPassword: rootpassword/auth.rootPassword: ${MARIADB_PWD}/' values.yaml"
                             sh "sed -i 's/username: myusername/username: ${MARIADB_USR}/' values.yaml"
                             sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
 
