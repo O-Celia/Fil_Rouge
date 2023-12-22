@@ -1,7 +1,7 @@
 ## Blog Info
-wordpressUsername: celia
-wordpressPassword: witcher
-wordpressEmail: celia.ouedrao@gmail.com
+wordpressUsername: username
+wordpressPassword: password
+wordpressEmail: email
 wordpressFirstName: Celia
 wordpressLastName: Ouedraogo
 wordpressBlogName: My Final Project
@@ -9,9 +9,16 @@ wordpressBlogName: My Final Project
 ## Database Settings
 mariadb:
   enabled: true
-  auth.rootPassword: Witcher_95
+  auth.rootPassword: rootpassword
   database: mariadb-celia
-  username: wordpress
+  username: myusername
+  primary:
+    persistence:
+      enabled: true
+      storageClass: default
+      accessModes:
+        - ReadWriteOnce
+      size: 10Gi
 
 ## Ingress Configuration
 ingress:
@@ -30,3 +37,25 @@ ingress:
 ## Wordpress Service
 service:
   type: ClusterIP
+
+## Persistence
+persistence:
+  enabled: true
+  storageClass: default
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+## Resource limits and requests
+resources:
+  limits:
+    cpu: 200m
+    memory: 500Mi
+  requests:
+    cpu: 200m
+    memory: 500Mi
+
+## Internal container port (#default: 8000#)
+containerPort:
+  http: 8080
+  https: 8443

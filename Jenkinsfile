@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        // stage('Clean Workspace') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             when {
@@ -98,15 +98,23 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'passwordMariadb', variable: 'MARIADB_PWD'),
+                                     string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL'),
                                      string(credentialsId: 'usernameMariadb', variable: 'MARIADB_USR')]) {
                         dir('terraform/helm') {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
-                            sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
+                            // sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
+                            sh ""
                             // Update values-wordpress.yaml with the actual email
-                            sh "sed -i 's/password: mypassword/password: ${MARIADB_PWD}/' values-wordpress.yaml"
-                            sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
-                            sh "sed -i 's/user: myusername/user: ${MARIADB_USR}/' values-wordpress.yaml"
-                            sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
+                            // sh "sed -i 's/password: mypassword/password: ${MARIADB_PWD}/' values-wordpress.yaml"
+                            // sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
+                            // sh "sed -i 's/user: myusername/user: ${MARIADB_USR}/' values-wordpress.yaml"
+                            // sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
+                            sh "sed -i 's/wordpressPassword: mypassword/wordpressPassword: ${MARIADB_PWD}/' values.yaml"
+                            sh "sed -i 's/wordpressUsername: username/wordpressUsername: ${MARIADB_USR}/' values.yaml"
+                            sh "sed -i 's/wordpressEmail: email/wordpressEmail: ${CERTBOT_EMAIL}/' values.yaml"
+                            sh "sed -i 's/auth.rootPassword: rootpassword/auth.rootPassword: : ${MARIADB_PWD}/' values.yaml"
+                            sh "sed -i 's/username: myusername/username: ${MARIADB_USR}/' values.yaml"
+                            sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
 
                             // Apply autoscaler, redirection of https, password of grafana and certmanager
                             sh "kubectl apply -f autoscaler.yaml"
