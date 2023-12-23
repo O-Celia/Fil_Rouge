@@ -7,17 +7,17 @@ pipeline {
 
     stages {
 
-        // stage('Clean Workspace') {
-        //     when {
-        //         not {
-        //             triggeredBy 'TimerTrigger'
-        //         }
-        //     }
-        //     steps {
-        //         // This step deletes the entire workspace
-        //         deleteDir()
-        //     }
-        // }
+        stage('Clean Workspace') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                // This step deletes the entire workspace
+                deleteDir()
+            }
+        }
 
         stage('Cloning the git') {
             when {
@@ -108,7 +108,7 @@ pipeline {
                             // sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
                             // sh "sed -i 's/user: myusername/user: ${MARIADB_USR}/' values-wordpress.yaml"
                             // sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
-                            sh "sed -i 's/wordpressPassword: mypassword/wordpressPassword: ${MARIADB_PWD}/' values.yaml"
+                            sh "sed -i 's/wordpressPassword: password/wordpressPassword: ${MARIADB_PWD}/' values.yaml"
                             sh "sed -i 's/wordpressUsername: username/wordpressUsername: ${MARIADB_USR}/' values.yaml"
                             sh "sed -i 's/wordpressEmail: email/wordpressEmail: ${CERTBOT_EMAIL}/' values.yaml"
                             sh "sed -i 's/auth.rootPassword: rootpassword/auth.rootPassword: ${MARIADB_PWD}/' values.yaml"
