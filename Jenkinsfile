@@ -103,7 +103,6 @@ pipeline {
                         dir('terraform/helm') {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
                             // sh "helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/"
-                            sh ""
                             // Update values-wordpress.yaml with the actual email
                             // sh "sed -i 's/password: mypassword/password: ${MARIADB_PWD}/' values-wordpress.yaml"
                             // sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
