@@ -12,13 +12,13 @@ mariadb:
   auth.rootPassword: rootpassword
   database: mariadb-celia
   username: myusername
-  primary:
-    persistence:
-      enabled: true
-      storageClass: default
-      accessModes:
-        - ReadWriteOnce
-      size: 10Gi
+  # primary:
+  #   persistence:
+  #     enabled: true
+  #     storageClass: default
+  #     accessModes:
+  #       - ReadWriteOnce
+  #     size: 10Gi
 
 ## Ingress Configuration
 ingress:
@@ -39,21 +39,21 @@ service:
   type: ClusterIP
 
 ## Persistence
-persistence:
-  enabled: true
-  storageClass: default
-  accessModes:
-    - ReadWriteOnce
-  size: 5Gi
+# persistence:
+#   enabled: true
+#   storageClass: default
+#   accessModes:
+#     - ReadWriteOnce
+#   size: 5Gi
 
 ## Resource limits and requests
-resources:
-  limits:
-    cpu: 200m
-    memory: 500Mi
-  requests:
-    cpu: 200m
-    memory: 500Mi
+# resources:
+#   limits:
+#     cpu: 200m
+#     memory: 500Mi
+#   requests:
+#     cpu: 200m
+#     memory: 500Mi
 
 ## Internal container port (#default: 8000#)
 containerPort:
