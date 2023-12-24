@@ -128,12 +128,21 @@ pipeline {
                 script {
                     sh "az aks get-credentials -g project_celia -n cluster-project"
                     // Get the IP address of Traefik
-                    def traefikIP = sh(script: "kubectl get svc traefik -n default --template=\"{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}\"", returnStdout: true).trim()
+                    def traefikIP = sh(script: """
+                                      kubectl get svc traefik -n default \
+                                      --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}"
+                                      """, returnStdout: true).trim()
 
                     // Use Gandi API key from Jenkins credentials
                     withCredentials([string(credentialsId: 'APIkey', variable: 'GANDI_API_KEY')]) {
                         // Update the DNS record on Gandi
-                        sh "curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Apikey ${GANDI_API_KEY}' -d '{\"rrset_values\": [\"${traefikIP}\"]}' 'https://api.gandi.net/v5/livedns/domains/cecicelia.site/records/myblog/A'"
+                        sh """
+                        curl -X PUT \
+                            -H 'Content-Type: application/json' \
+                            -H 'Authorization: Apikey ${GANDI_API_KEY}' \
+                            -d '{\\"rrset_values\\": [\\"${traefikIP}\\"]}' \
+                            'https://api.gandi.net/v5/livedns/domains/cecicelia.site/records/myblog/A'
+                        """
                     }
                 }
             }
@@ -158,7 +167,11 @@ pipeline {
                             boolean webhookReady = false
                             while (!webhookReady && attempts < 10) {
                                 // Check if the pod is ready
-                                if (sh(script: "kubectl get pods -n cert-manager -l app=webhook -o jsonpath='{.items[*].status.conditions[?(@.type==\"Ready\")].status}'", returnStatus: true) == 0) {
+                                if (sh(script: """
+                                    kubectl get pods -n cert-manager \
+                                    -l app=webhook \
+                                    -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}'
+                                    """, returnStatus: true) == 0) {
                                     // Delay of 2min for the TLS certificates
                                     sleep(120)
                                     // Perform a test request or additional check to confirm the webhook is operational
@@ -246,7 +259,16 @@ pipeline {
                         sh "az aks get-credentials -g project_celia -n cluster-project"
                         sh "wpscan --url $WORDPRESS_DNS --api-token $WPS_TOKEN --ignore-main-redirect --verbose > wpscan_results.txt"
                         // Upload the file to Azure Storage Container
-                        sh "az storage blob upload --account-name ${env.STORAGE_ACCOUNT} --account-key ${env.STORAGE_KEY} --container-name ${env.CONTAINER_NAME} --name wpscan_results.txt --file wpscan_results.txt --auth-mode key --overwrite true"
+                        sh """
+                        az storage blob upload \
+                        --account-name ${env.STORAGE_ACCOUNT} \
+                        --account-key ${env.STORAGE_KEY} \
+                        --container-name ${env.CONTAINER_NAME} \
+                        --name wpscan_results.txt \
+                        --file wpscan_results.txt \
+                        --auth-mode key \
+                        --overwrite true
+                        """
                     }
                 }
             }
