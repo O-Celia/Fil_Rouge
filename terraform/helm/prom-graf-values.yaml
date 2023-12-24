@@ -25,16 +25,6 @@ grafana:
   enabled: true
   # Configures Grafana to use mariadb as a datasource
   additionalDataSources: []
-  # additionalDataSources:
-  #   - name: MariaDB
-  #     type: mysql
-  #     url: myblog-mariadb.default.svc.cluster.local:3306
-  #     access: proxy
-  #     isDefault: false
-  #     database: mariadb-celia
-  #     user: wordpress
-  #     secureJsonData:
-  #       password: password
   adminPassword: mypassword
   persistence:
     enabled: true
