@@ -215,7 +215,7 @@ storage:
   persistentVolumeClaimName:
 
   ## Alternative set requestedSize to define a size for a dynmaically created PVC
-  requestedSize: 10Gi
+  requestedSize: 5Gi
 
   ## the storage class name
   className: default
@@ -252,7 +252,7 @@ mariadb:
     persistentVolumeClaimName:
 
     ## Alternative set requestedSize to define a size for a dynmaically created PVC
-    requestedSize: 5Gi
+    requestedSize: 10Gi
 
     ## the storage class name
     className: default

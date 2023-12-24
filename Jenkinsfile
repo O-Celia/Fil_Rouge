@@ -98,7 +98,6 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'passwordMariadb', variable: 'MARIADB_PWD'),
-                                    //  string(credentialsId: 'mail', variable: 'CERTBOT_EMAIL'),
                                      string(credentialsId: 'usernameMariadb', variable: 'MARIADB_USR')]) {
                         dir('terraform/helm') {
                             sh "az aks get-credentials -g project_celia -n cluster-project"
@@ -107,12 +106,6 @@ pipeline {
                             sh "sed -i 's/rootPassword: rootpassword/rootPassword: ${MARIADB_PWD}/' values-wordpress.yaml"
                             sh "sed -i 's/user: myusername/user: ${MARIADB_USR}/' values-wordpress.yaml"
                             sh 'helm upgrade --install myblog -f values-wordpress.yaml groundhog2k/wordpress'
-                            // sh "sed -i 's/wordpressPassword: password/wordpressPassword: ${MARIADB_PWD}/' values.yaml"
-                            // sh "sed -i 's/wordpressUsername: username/wordpressUsername: ${MARIADB_USR}/' values.yaml"
-                            // sh "sed -i 's/wordpressEmail: email/wordpressEmail: ${CERTBOT_EMAIL}/' values.yaml"
-                            // sh "sed -i 's/auth.rootPassword: rootpassword/auth.rootPassword: ${MARIADB_PWD}/' values.yaml"
-                            // sh "sed -i 's/username: myusername/username: ${MARIADB_USR}/' values.yaml"
-                            // sh 'helm upgrade --install myblog -f values.yaml oci://registry-1.docker.io/bitnamicharts/wordpress'
 
                             // Apply autoscaler, redirection of https, password of grafana and certmanager
                             sh "kubectl apply -f autoscaler.yaml"
@@ -184,13 +177,6 @@ pipeline {
                             // Update certmanager.yaml with the actual email
                             sh "sed -i 's/email: mymail/email: ${CERTBOT_EMAIL}/' certmanager.yaml"
                             sh "kubectl apply -f certmanager.yaml"
-
-                            // // Update traefik with values.yaml
-                            // sh('''
-                            //     helm repo add traefik https://traefik.github.io/charts
-                            //     helm repo update
-                            //     helm upgrade traefik traefik/traefik -f traefik-values.yaml --version 25.0.0
-                            // ''')
                         }
                     }
                 }
@@ -244,7 +230,7 @@ pipeline {
             }
         }
 
-stage('Run WPScan') {
+        stage('Run WPScan') {
             when {
                 anyOf {
                     triggeredBy 'TimerTrigger'
