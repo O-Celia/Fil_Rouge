@@ -219,6 +219,32 @@ pipeline {
             }
         }
 
+        stage('Deploy Kube-hunter') {
+            when {
+                not {
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                script {
+                    sh "az aks get-credentials -g project_celia -n cluster-project"
+                    // Appliquer le fichier YAML pour lancer Kube-hunter dans le cluster
+                    sh 'kubectl apply -f kubehunter-job.yaml'
+                    sh 'kubectl logs job/kubehunter > kubehunter-results.json'
+                    sh """
+                    az storage blob upload \
+                    --account-name ${env.STORAGE_ACCOUNT} \
+                    --account-key ${env.STORAGE_KEY} \
+                    --container-name ${env.CONTAINER_NAME} \
+                    --name kubehunter_results.json \
+                    --file kubehunter_results.json \
+                    --auth-mode key \
+                    --overwrite true
+                    """
+                }
+            }
+        }
+
         stage('SonarCloud analysis') {
             when {
                 not {

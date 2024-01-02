@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kubehunter
+spec:
+  schedule: "0 8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: kubehunter
+            image: aquasec/kube-hunter
+            command: ["kube-hunter", "--report", "json"]
+          restartPolicy: Never
