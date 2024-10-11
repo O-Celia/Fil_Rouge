@@ -4,8 +4,8 @@ Le fichier *Cahier_des_charges* présente le rapport du projet.
 
 Le fichier *Présentation* contient le support de présentation orale.
 
-Le fichier *jenkins-docker* contient les fichiers Docker pour installer Jenkins.
+Le dossier *jenkins-docker* contient les fichiers Docker pour installer Jenkins.
 
-Le fichier *vm* contient les fichiers Terraform de l'installation de la VM sur laquelle le travail a été effectué.
+Le dossier *vm* contient les fichiers Terraform de l'installation de la VM sur laquelle le travail a été effectué.
 
-Le fichier *terraform* contient les fichiers Helm et Terraform pour le déploiement de l'infrastructure du projet.
+Le dossier *terraform* contient les fichiers Helm et Terraform pour le déploiement de l'infrastructure du projet.
